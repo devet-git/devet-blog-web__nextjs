@@ -1,4 +1,10 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const nextConfig = {
+	images: {
+		dangerouslyAllowSVG: true,
+		domains: ['tailwindui.com']
+	},
+	reactStrictMode: true
+}
 
 module.exports = nextConfig
