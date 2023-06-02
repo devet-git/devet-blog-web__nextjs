@@ -1,4 +1,3 @@
-import '@/app/globals.css'
 import Head from 'next/head'
 import Link from 'next/link'
 export default function Custom404() {

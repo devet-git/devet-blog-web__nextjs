@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Head from "next/head";
-import '@/app/globals.css'
 import Link from "next/link";
 import { useFormik } from "formik";
 import * as Yup from "yup"
