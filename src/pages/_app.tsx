@@ -3,10 +3,7 @@ import createdTheme from "@/theme"
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 import { createEmotionCache } from "@/utils/create-emotion-cache";
 import "@/styles/globals.css"
-import MainLayout from "@/layouts/main-layout";
 import Head from "next/head";
-import NProgress from 'nprogress';
-import Router from "next/router";
 import { ReactElement } from "react";
 import useNProgress from "@/hooks/use-nprogress";
 

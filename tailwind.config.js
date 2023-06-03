@@ -4,6 +4,7 @@ module.exports = {
 		'./src/pages/**/*.{js,ts,jsx,tsx,mdx}',
 		'./src/components/**/*.{js,ts,jsx,tsx,mdx}',
 		'./src/app/**/*.{js,ts,jsx,tsx,mdx}',
+		"./node_modules/tw-elements/dist/js/**/*.js",
 	],
 	theme: {
 		extend: {
@@ -16,5 +17,7 @@ module.exports = {
 	},
 	plugins: [
 		require('@tailwindcss/forms'),
+		require("tw-elements/dist/plugin")
 	],
+	darkMode: "class",
 }
