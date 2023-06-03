@@ -29,6 +29,7 @@ export default function NavBar() {
 		{ name: 'Home', href: pagePaths.home, current: currentPath === pagePaths.home },
 		{ name: 'Feeds', href: pagePaths.article, current: [pagePaths.article, pagePaths.articleContent(articleId)].includes(currentPath) },
 		{ name: 'Post article', href: pagePaths.createArticle, current: currentPath === pagePaths.createArticle },
+		{ name: 'About me', href: pagePaths.intro.me, current: currentPath === pagePaths.intro.me },
 	]
 	return (
 		<Disclosure as="nav" className="bg-gray-100 sticky top-0 z-30 backdrop-blur-sm bg-opacity-75">
