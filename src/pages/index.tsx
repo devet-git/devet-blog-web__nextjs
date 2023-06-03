@@ -1,10 +1,14 @@
-import NavBar from "@/components/nav-bar";
+import Categories from "@/components/category/categories";
+import ArticleCollection from "@/components/article/collection";
+import Slider from "@/components/slider";
 import MainLayout from "@/layouts/main-layout";
 
 const Page = () => {
 	return (
 		<>
-			Haha
+			<Slider />
+			<Categories />
+			<ArticleCollection />
 		</>
 	)
 }
