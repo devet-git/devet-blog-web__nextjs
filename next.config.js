@@ -2,7 +2,7 @@
 const nextConfig = {
 	images: {
 		dangerouslyAllowSVG: true,
-		domains: ['tailwindui.com']
+		domains: ['tailwindui.com', 'images.unsplash.com']
 	},
 	reactStrictMode: true
 }

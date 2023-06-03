@@ -1,0 +1,17 @@
+.ql-editor img {
+	max-width: 65% !important;
+	height: auto;
+	text-align: center;
+}
+
+.ql-editor .ql-video {
+	width: auto;
+	height: auto;
+	max-width: 100%;
+}
+
+.ql-container.ql-snow {
+	border: none !important;
+	margin: 0 10%;
+	height: auto;
+}
