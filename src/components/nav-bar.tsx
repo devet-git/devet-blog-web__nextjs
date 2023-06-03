@@ -8,19 +8,27 @@ import pagePaths from '@/constants/page-path'
 import { classNames } from '@/utils/html-class'
 
 const menuItems = {
-	forGuest: ["Resgister", "Login"],
-	forUser: ["My profile", "Setting", "Sign out"],
+	forGuest: [
+		{ name: "Resgister", href: pagePaths.auth.register },
+		{ name: "Login", href: pagePaths.auth.login },
+	],
+	forUser: [
+		{ name: "My profile", href: "#" },
+		{ name: "Setting", href: "#" },
+		{ name: "Sign out", href: "#" },
+		{ name: "Create your article", href: pagePaths.createArticle },
+	],
 }
 
 export default function NavBar() {
 	const router = useRouter()
 	const currentPath = router.asPath;
+	const { articleId } = router.query;
 
 	const navigation = [
 		{ name: 'Home', href: pagePaths.home, current: currentPath === pagePaths.home },
-		{ name: 'Articles', href: pagePaths.article, current: false },
-		{ name: 'Create article', href: pagePaths.createArticle, current: currentPath === pagePaths.createArticle },
-		{ name: 'Calendar', href: '#', current: false },
+		{ name: 'Feeds', href: pagePaths.article, current: [pagePaths.article, pagePaths.articleContent(articleId)].includes(currentPath) },
+		{ name: 'Post article', href: pagePaths.createArticle, current: currentPath === pagePaths.createArticle },
 	]
 	return (
 		<Disclosure as="nav" className="bg-gray-100 sticky top-0 z-30 backdrop-blur-sm bg-opacity-75">
@@ -107,39 +115,18 @@ export default function NavBar() {
 										leaveTo="transform opacity-0 scale-95"
 									>
 										<Menu.Items className="absolute right-0 z-30 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-											{("user" !== "user" ? menuItems.forGuest : menuItems.forUser).map((menuItem, index) => (
+											{("user" === "user" ? menuItems.forGuest : menuItems.forUser).map((menuItem, index) => (
 												<Menu.Item key={index}>
 													{({ active }) => (
-														<a
-															href="#"
+														<Link
+															href={menuItem.href}
 															className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
 														>
-															{menuItem}
-														</a>
+															{menuItem.name}
+														</Link>
 													)}
 												</Menu.Item>
 											))}
-
-											{/* <Menu.Item>
-												{({ active }) => (
-													<a
-														href="#"
-														className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-													>
-														Settings
-													</a>
-												)}
-											</Menu.Item>
-											<Menu.Item>
-												{({ active }) => (
-													<a
-														href="#"
-														className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-													>
-														Sign out
-													</a>
-												)}
-											</Menu.Item> */}
 										</Menu.Items>
 									</Transition>
 								</Menu>
