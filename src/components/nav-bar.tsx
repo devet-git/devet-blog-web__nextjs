@@ -22,7 +22,7 @@ export default function NavBar() {
 		{ name: 'Calendar', href: '#', current: false },
 	]
 	return (
-		<Disclosure as="nav" className="bg-gray-800">
+		<Disclosure as="nav" className="bg-gray-100">
 			{({ open }) => (
 				<>
 					<div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -42,17 +42,17 @@ export default function NavBar() {
 								<div className="flex flex-shrink-0 items-center">
 									<Image
 										className="block h-8 w-auto lg:hidden"
-										src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+										src="/favicon-512x512.png"
 										alt="Your Company"
 										width={100}
 										height={100}
 									/>
 									<Image
-										className="hidden h-8 w-auto lg:block"
-										src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+										className="hidden h-10 w-auto lg:block"
+										src="/favicon-512x512.png"
 										alt="Your Company"
-										width={100}
-										height={100}
+										width={200}
+										height={200}
 									/>
 								</div>
 								<div className="hidden sm:ml-6 sm:block">
@@ -62,7 +62,7 @@ export default function NavBar() {
 												key={item.name}
 												href={item.href}
 												className={classNames(
-													item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+													item.current ? 'bg-gray-900 text-white' : 'text-black hover:bg-gray-700 hover:text-white',
 													'rounded-md px-3 py-2 text-sm font-medium'
 												)}
 												aria-current={item.current ? 'page' : undefined}
