@@ -3,7 +3,7 @@ import { XMarkIcon } from '@heroicons/react/20/solid'
 import { useState } from 'react'
 
 export default function Banner() {
-	const [isClose, setIsClose] = useState(false);
+	const [isClose, setIsClose] = useState(true);
 
 	const handleClose = () => setIsClose(true);
 	return (

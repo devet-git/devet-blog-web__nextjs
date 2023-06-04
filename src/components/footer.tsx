@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import pagePaths from "@/constants/page-path";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -13,7 +14,7 @@ export default function Footer() {
 					</Link>
 					<ul className="flex flex-wrap items-center mb-6 text-sm font-medium text-gray-500 sm:mb-0 dark:text-gray-400">
 						<li>
-							<a href="#" className="mr-4 hover:underline md:mr-6 ">About</a>
+							<Link href={pagePaths.intro.me} className="mr-4 hover:underline md:mr-6 ">About me</Link>
 						</li>
 						<li>
 							<a href="#" className="mr-4 hover:underline md:mr-6">Privacy Policy</a>
@@ -27,7 +28,7 @@ export default function Footer() {
 					</ul>
 				</div>
 				<hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
-				<span className="block text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2023 <span className="hover:underline">Devet Blog™</span>. All Rights Reserved.</span>
+				<span className="block text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2023 <span className="hover:underline">Devet™</span>. All Rights Reserved.</span>
 			</div>
 		</footer>
 
