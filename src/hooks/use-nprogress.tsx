@@ -8,7 +8,7 @@ export default function useNProgress() {
 		easing: 'ease',
 		speed: 500,
 		showSpinner: false,
-		trickle: true,
+		// trickle: true,
 		trickleSpeed: 200,
 		// parent: '#my-custom-element',
 		// barSelector: '.my-custom-bar',

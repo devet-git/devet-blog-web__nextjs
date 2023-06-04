@@ -16,7 +16,7 @@ const Page = () => {
 		<>
 			<div className="container mx-auto p-4">
 				<div className="bg-white p-8 rounded-lg shadow-lg">
-					<div className="flex gap-x-3">
+					<div className="flex gap-x-3 flex-col md:flex-row">
 						<div className="flex-shrink-0 mr-4">
 							<Image
 								src="/me.jpg"
@@ -26,13 +26,13 @@ const Page = () => {
 								height={200}
 							/>
 						</div>
-						<div className='flex-shrink-0'>
+						<div className='flex-shrink-0 md:w-1/3'>
 							<h2 className="text-2xl font-bold text-gray-800">Bui Quang Thang</h2>
 							<p className="text-gray-600">FE & BE Developer</p>
 							<p className="text-gray-600">devet.279@gmail.com</p>
 							<p className="text-gray-600">Cao Thang, Eakao, Buon Ma Thuot</p>
 						</div>
-						<div className='flex items-start justify-end w-full [&_a]:mx-1 [&_a]:block'>
+						<div className='flex items-start md:justify-end sm:justify-center w-full [&_a]:mx-1 [&_a]:block'>
 							<a
 								href='https://www.facebook.com/thangq.279/'
 								className="flex-grow-0 bg-blue-700 hover:bg-blue-500 text-white font-bold py-1 px-4 rounded"
@@ -47,12 +47,6 @@ const Page = () => {
 							>
 								Github
 							</a>
-							{/* <button
-								className="middle none center rounded-lg bg-pink-500 p-3 font-sans text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-								data-ripple-light="true"
-							>
-								<i className="material-icons">dashboard</i>
-							</button> */}
 						</div>
 					</div>
 
@@ -69,7 +63,7 @@ const Page = () => {
 							<ul className="">
 								{skillList.map((skillName, index) => (
 									<li className='flex items-center space-x-3' key={index}>
-										<svg className="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+										<svg className="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path></svg>
 										<span>{skillName}</span>
 									</li>
 								))}

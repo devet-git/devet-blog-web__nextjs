@@ -29,13 +29,13 @@ const Page = () => {
 		//CAll API
 	}
 	return (
-		<>
+		<div className='relative'>
 			{typeof window !== 'undefined' && (
 				<ReactQuill
 					theme="snow"
 					value={value}
 					onChange={setValue}
-					className='h-[80vh] overflow-y-auto bg-white [&_.ql-toolbar]:sticky [&_.ql-toolbar]:top-0 [&_.ql-toolbar]:bg-indigo-100 [&_.ql-toolbar]:z-10'
+					className='min-h-[85vh] overflow-y-auto mt-[10vh] bg-white [&_.ql-toolbar]:z-10'
 					modules={{
 						toolbar: { container: toolbarOptions },
 					}}
@@ -43,15 +43,15 @@ const Page = () => {
 				/>
 			)}
 			{/* <div dangerouslySetInnerHTML={{ __html: value }} /> */}
-			<Button
-				variant="outlined"
-				size="large"
+			<button
 				onClick={handlePost}
-				className='right-0'
+				className="fixed lg:top-[calc(10vh+10px)] md:top-[calc(10vh+30px)] right-5 z-10 inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-black to-cyan-300 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800"
 			>
-				Post
-			</Button>
-		</>
+				<span className="relative px-4 py-1 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+					Post
+				</span>
+			</button>
+		</div>
 	)
 }
 Page.getLayout = (page: ReactElement) => (<MainLayout>	{page}</MainLayout>)

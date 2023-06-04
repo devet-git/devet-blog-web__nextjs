@@ -4,7 +4,7 @@
 }
 
 #nprogress .bar {
-	background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgb(22, 22, 150) 29%, rgba(0, 212, 255, 1) 57%, rgba(229, 250, 255, 1) 85%);
+	background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgb(22, 22, 150) 29%, rgba(0, 212, 255, 1) 57%, lightgreen 85%);
 
 	position: fixed;
 	z-index: 1031;
@@ -22,7 +22,7 @@
 	right: 0px;
 	width: 100px;
 	height: 100%;
-	box-shadow: 0 0 10px #29d, 0 0 5px #29d;
+	/* box-shadow: 0 0 10px #29d, 0 0 5px #29d; */
 	opacity: 1.0;
 
 	-webkit-transform: rotate(3deg) translate(0px, -4px);

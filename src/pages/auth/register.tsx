@@ -9,9 +9,9 @@ export default function LoginPage() {
 	const formik = useFormik({
 		initialValues: {
 			name: "",
-			email: '',
-			password: '',
-			rePassword: '',
+			email: "",
+			password: "",
+			rePassword: "",
 		},
 		validationSchema: Yup.object({
 			email: Yup.string().email("Must be a valid email").max(255).required("Email is required"),
@@ -34,12 +34,12 @@ export default function LoginPage() {
 			<Head>
 				<title>Register - Devet Blog</title>
 			</Head>
-			<div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-white">
+			<div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-5 lg:px-8 bg-white">
 				<div className="sm:mx-auto sm:w-full sm:max-w-sm">
 					<Link href={'/'}>
 						<Image
 							className="mx-auto h-10 w-auto"
-							src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+							src="/favicon-512x512.png"
 							alt="Your Company"
 							width={500}
 							height={500}
@@ -51,7 +51,7 @@ export default function LoginPage() {
 				</div>
 
 				<div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
-					<form className="space-y-6" action="#" method="POST">
+					<form className="space-y-6" onSubmit={formik.handleSubmit}>
 						<TextField
 							id="name"
 							name="name"
@@ -70,7 +70,7 @@ export default function LoginPage() {
 							id="email"
 							name="email"
 							type="email"
-							label="Email Address"
+							label="Email"
 							autoComplete="email"
 							fullWidth
 							required
@@ -96,34 +96,31 @@ export default function LoginPage() {
 								value={formik.values.password}
 							/>
 						</div>
-						<div className="mt-2">
-							<TextField
-								id="rePassword"
-								name="rePassword"
-								type="password"
-								label="Re-password"
-								autoComplete="rePassword"
-								required
-								fullWidth
-								error={!!(formik.touched.rePassword && formik.errors.rePassword)}
-								helperText={formik.touched.rePassword && formik.errors.rePassword}
-								onBlur={formik.handleBlur}
-								onChange={formik.handleChange}
-								value={formik.values.rePassword}
-							/>
-						</div>
 
-						<div>
-							<button
-								type="submit"
-								className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-							>
-								Register
-							</button>
-						</div>
+						<TextField
+							id="rePassword"
+							name="rePassword"
+							type="password"
+							label="Re-password"
+							autoComplete="rePassword"
+							required
+							fullWidth
+							error={!!(formik.touched.rePassword && formik.errors.rePassword)}
+							helperText={formik.touched.rePassword && formik.errors.rePassword}
+							onBlur={formik.handleBlur}
+							onChange={formik.handleChange}
+							value={formik.values.rePassword}
+						/>
+						<button
+							type="submit"
+							className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+						>
+							Register
+						</button>
+
 					</form>
 
-					<p className="mt-10 text-center text-sm text-gray-500">
+					<p className="mt-5 text-center text-sm text-gray-500">
 						Already have account.{' '}
 						<Link href="login" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
 							Login

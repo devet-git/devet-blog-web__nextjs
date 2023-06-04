@@ -4,8 +4,8 @@ const pagePaths = {
 		login: "/auth/login",
 		register: "/auth/register",
 	},
-	intro: {
-		me: '/introduce/me'
+	me: {
+		intro: '/me/introduce'
 	},
 	home: '/',
 	createArticle: '/articles/create',
