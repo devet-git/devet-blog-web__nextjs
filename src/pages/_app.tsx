@@ -6,6 +6,7 @@ import "@/styles/globals.css"
 import Head from "next/head";
 import { ReactElement } from "react";
 import useNProgress from "@/hooks/use-nprogress";
+import { SnackbarProvider } from "notistack";
 
 
 
@@ -31,7 +32,17 @@ export default function App(props: any): any {
 			<CacheProvider value={emotionCache}>
 				<StyledEngineProvider injectFirst>
 					<ThemeProvider theme={theme}>
-						<Component {...pageProps} />
+						<SnackbarProvider
+							maxSnack={5}
+							autoHideDuration={2000}
+							preventDuplicate={true}
+							anchorOrigin={{
+								vertical: 'bottom',
+								horizontal: 'left',
+							}}
+						>
+							<Component {...pageProps} />
+						</SnackbarProvider>
 					</ThemeProvider>
 				</StyledEngineProvider>
 			</CacheProvider>

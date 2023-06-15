@@ -4,8 +4,26 @@ import Link from "next/link";
 import { useFormik } from "formik"
 import * as Yup from "yup";
 import { TextField } from "@mui/material";
-export default function LoginPage() {
+import authService from "@/services/auth";
+import notify from "@/configs/notify";
+import { useRouter } from "next/router";
+import pagePaths from "@/constants/page-path";
+import withoutAuth from "@/middlewares/without-auth";
 
+
+
+function Page() {
+	const router = useRouter()
+	const handleLogin = async (values: any) => {
+		const { name, email, password } = values;
+		const data = await authService.register({ username: name, email, password })
+		if (data) {
+			notify.success()
+			setTimeout(() => {
+				router.push(pagePaths.home)
+			}, 2000);
+		}
+	}
 	const formik = useFormik({
 		initialValues: {
 			name: "",
@@ -21,7 +39,7 @@ export default function LoginPage() {
 		}),
 		onSubmit: async (values, helpers) => {
 			try {
-				//
+				handleLogin(values);
 			} catch (err) {
 				helpers.setStatus({ success: false });
 				// helpers.setErrors({ submit: err.message });
@@ -131,3 +149,4 @@ export default function LoginPage() {
 		</>
 	)
 }
+export default withoutAuth(Page)

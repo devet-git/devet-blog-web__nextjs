@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic'
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 import DOMPurify from 'dompurify'
 import MainLayout from '@/layouts/main-layout';
+import withAuth from '@/middlewares/with-auth';
 const toolbarOptions = [
 	['bold', 'italic', 'underline', 'strike'],
 	[{ 'align': [] }],
@@ -56,4 +57,4 @@ const Page = () => {
 }
 Page.getLayout = (page: ReactElement) => (<MainLayout>	{page}</MainLayout>)
 
-export default Page;
+export default withAuth(Page);

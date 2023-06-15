@@ -9,8 +9,8 @@ import { classNames } from '@/utils/html-class'
 
 const menuItems = {
 	forGuest: [
-		{ name: "Resgister", href: pagePaths.auth.register },
-		{ name: "Login", href: pagePaths.auth.login },
+		{ name: "Resgister", href: pagePaths.auth.REGISTER },
+		{ name: "Login", href: pagePaths.auth.LOGIN },
 	],
 	forUser: [
 		{ name: "My profile", href: "#" },
