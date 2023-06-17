@@ -77,13 +77,13 @@ function Page() {
 							label="Name"
 							autoComplete="name"
 							fullWidth
-							required
 							error={!!(formik.touched.name && formik.errors.name)}
 							helperText={formik.touched.name && formik.errors.name}
 							onBlur={formik.handleBlur}
 							onChange={formik.handleChange}
 							value={formik.values.name}
 						/>
+
 						<TextField
 							id="email"
 							name="email"
@@ -91,7 +91,6 @@ function Page() {
 							label="Email"
 							autoComplete="email"
 							fullWidth
-							required
 							error={!!(formik.touched.email && formik.errors.email)}
 							helperText={formik.touched.email && formik.errors.email}
 							onBlur={formik.handleBlur}
@@ -105,7 +104,6 @@ function Page() {
 								type="password"
 								label="Password"
 								autoComplete="password"
-								required
 								fullWidth
 								error={!!(formik.touched.password && formik.errors.password)}
 								helperText={formik.touched.password && formik.errors.password}
@@ -121,7 +119,6 @@ function Page() {
 							type="password"
 							label="Re-password"
 							autoComplete="rePassword"
-							required
 							fullWidth
 							error={!!(formik.touched.rePassword && formik.errors.rePassword)}
 							helperText={formik.touched.rePassword && formik.errors.rePassword}

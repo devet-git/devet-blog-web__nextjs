@@ -7,7 +7,7 @@ import Head from "next/head";
 import { ReactElement } from "react";
 import useNProgress from "@/hooks/use-nprogress";
 import { SnackbarProvider } from "notistack";
-
+import wrapper from "@/redux/store";
 
 
 /**
@@ -19,11 +19,13 @@ import { SnackbarProvider } from "notistack";
 * @returns {*}
 */
 const clientSideEmotionCache = createEmotionCache();
-export default function App(props: any): any {
+function App(props: any): any {
 	const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
 	const theme = createdTheme()
 	const getLayout = Component.getLayout || ((page: ReactElement) => page);
 	useNProgress();
+
+
 	return getLayout(
 		<>
 			<Head>
@@ -49,3 +51,4 @@ export default function App(props: any): any {
 		</>
 	)
 }
+export default wrapper.withRedux(App);

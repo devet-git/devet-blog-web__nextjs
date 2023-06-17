@@ -2,7 +2,6 @@ import api from "@/configs/api";
 import endpoints from "@/constants/endpoints";
 import localStorageNames from "@/constants/local-storage-names";
 import apiErrorHandler from "@/handlers/apiError";
-import axios from "axios";
 export interface UserLogin {
 	email: string,
 	password: string
@@ -41,6 +40,8 @@ const authService = {
 	},
 	async logout() {
 		const res = await api.get(endpoints.auth.LOGOUT)
+		res.status == 200 && localStorage.clear();
+
 		return res.status == 200
 	}
 }

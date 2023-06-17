@@ -13,8 +13,9 @@ const apiErrorHandler = (error: any) => {
 		} else {
 			// Handle network error
 			// console.log('Network error');
-			enqueueSnackbar("Network error");
-			throw new Error('Network error');
+			notify.error("Network error")
+			return;
+			// throw new Error('Network error');
 		}
 	} else {
 		// Handle generic error
