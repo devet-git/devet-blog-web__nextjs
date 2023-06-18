@@ -4,7 +4,31 @@ import Link from "next/link";
 import { useFormik } from "formik";
 import * as Yup from "yup"
 import { TextField } from "@mui/material";
-export default function LoginPage() {
+import authService from "@/services/auth";
+import { useRouter } from "next/router";
+import pagePaths from "@/constants/page-path";
+import notify from "@/configs/notify";
+import { NextPage } from "next";
+import withoutAuth from "@/middlewares/without-auth";
+import { setIsAuth } from "@/redux/authSlice";
+import { useDispatch } from "react-redux"
+
+const Page: NextPage = () => {
+	const router = useRouter();
+	const dispatch = useDispatch()
+
+	const handleLogin = async (values: any) => {
+		const { email, password } = values
+		const data = await authService.login({ email, password })
+		if (data) {
+			dispatch(setIsAuth(true)); //TODO: set global state
+			notify.success() //TODO: show notify
+			//TODO: redirect to home page or before page
+			setTimeout(() => {
+				router.push(router.query.continueUrl?.toString() || pagePaths.home)
+			}, 2000);
+		}
+	}
 
 	const formik = useFormik({
 		initialValues: {
@@ -17,7 +41,7 @@ export default function LoginPage() {
 		}),
 		onSubmit: async (values, helpers) => {
 			try {
-				//
+				handleLogin(values);
 			} catch (err) {
 				helpers.setStatus({ success: false });
 				// helpers.setErrors({ submit: err.message });
@@ -45,11 +69,23 @@ export default function LoginPage() {
 						Sign in to your account
 					</h2>
 					<section className="flex justify-evenly mt-10">
-						<button type="button" className="text-white bg-[#3b5998] hover:bg-[#3b5998]/90 focus:ring-4 focus:outline-none focus:ring-[#3b5998]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#3b5998]/55 mr-2 mb-2">
+						<button
+							type="button"
+							className="text-white bg-[#3b5998] hover:bg-[#3b5998]/90 focus:ring-4 focus:outline-none focus:ring-[#3b5998]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#3b5998]/55 mr-2 mb-2"
+							onClick={() => {
+								notify.info("The function is developing")
+							}}
+						>
 							<svg className="w-4 h-4 mr-2 -ml-1" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="facebook-f" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M279.1 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.4 0 225.4 0c-73.22 0-121.1 44.38-121.1 124.7v70.62H22.89V288h81.39v224h100.2V288z"></path></svg>
 							With Facebook
 						</button>
-						<button type="button" className="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 mr-2 mb-2">
+						<button
+							type="button"
+							className="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 mr-2 mb-2"
+							onClick={() => {
+								notify.info("The function is developing")
+							}}
+						>
 							<svg className="w-4 h-4 mr-2 -ml-1" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"></path></svg>
 							With Google
 						</button>
@@ -68,7 +104,6 @@ export default function LoginPage() {
 							label="Email Address"
 							autoComplete="email"
 							fullWidth
-							required
 							error={!!(formik.touched.email && formik.errors.email)}
 							helperText={formik.touched.email && formik.errors.email}
 							onBlur={formik.handleBlur}
@@ -89,7 +124,6 @@ export default function LoginPage() {
 								type="password"
 								label="Password"
 								autoComplete="password"
-								required
 								fullWidth
 								error={!!(formik.touched.password && formik.errors.password)}
 								helperText={formik.touched.password && formik.errors.password}
@@ -118,3 +152,4 @@ export default function LoginPage() {
 		</>
 	)
 }
+export default withoutAuth(Page);

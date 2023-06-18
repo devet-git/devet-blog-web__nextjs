@@ -1,8 +1,9 @@
 
 const pagePaths = {
+	privates: [],
 	auth: {
-		login: "/auth/login",
-		register: "/auth/register",
+		LOGIN: "/auth/login",
+		REGISTER: "/auth/register",
 	},
 	me: {
 		intro: '/me/introduce'

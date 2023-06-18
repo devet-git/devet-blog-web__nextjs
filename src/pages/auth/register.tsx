@@ -4,8 +4,26 @@ import Link from "next/link";
 import { useFormik } from "formik"
 import * as Yup from "yup";
 import { TextField } from "@mui/material";
-export default function LoginPage() {
+import authService from "@/services/auth";
+import notify from "@/configs/notify";
+import { useRouter } from "next/router";
+import pagePaths from "@/constants/page-path";
+import withoutAuth from "@/middlewares/without-auth";
 
+
+
+function Page() {
+	const router = useRouter()
+	const handleLogin = async (values: any) => {
+		const { name, email, password } = values;
+		const data = await authService.register({ username: name, email, password })
+		if (data) {
+			notify.success()
+			setTimeout(() => {
+				router.push(pagePaths.home)
+			}, 2000);
+		}
+	}
 	const formik = useFormik({
 		initialValues: {
 			name: "",
@@ -21,7 +39,7 @@ export default function LoginPage() {
 		}),
 		onSubmit: async (values, helpers) => {
 			try {
-				//
+				handleLogin(values);
 			} catch (err) {
 				helpers.setStatus({ success: false });
 				// helpers.setErrors({ submit: err.message });
@@ -59,13 +77,13 @@ export default function LoginPage() {
 							label="Name"
 							autoComplete="name"
 							fullWidth
-							required
 							error={!!(formik.touched.name && formik.errors.name)}
 							helperText={formik.touched.name && formik.errors.name}
 							onBlur={formik.handleBlur}
 							onChange={formik.handleChange}
 							value={formik.values.name}
 						/>
+
 						<TextField
 							id="email"
 							name="email"
@@ -73,7 +91,6 @@ export default function LoginPage() {
 							label="Email"
 							autoComplete="email"
 							fullWidth
-							required
 							error={!!(formik.touched.email && formik.errors.email)}
 							helperText={formik.touched.email && formik.errors.email}
 							onBlur={formik.handleBlur}
@@ -87,7 +104,6 @@ export default function LoginPage() {
 								type="password"
 								label="Password"
 								autoComplete="password"
-								required
 								fullWidth
 								error={!!(formik.touched.password && formik.errors.password)}
 								helperText={formik.touched.password && formik.errors.password}
@@ -103,7 +119,6 @@ export default function LoginPage() {
 							type="password"
 							label="Re-password"
 							autoComplete="rePassword"
-							required
 							fullWidth
 							error={!!(formik.touched.rePassword && formik.errors.rePassword)}
 							helperText={formik.touched.rePassword && formik.errors.rePassword}
@@ -131,3 +146,4 @@ export default function LoginPage() {
 		</>
 	)
 }
+export default withoutAuth(Page)

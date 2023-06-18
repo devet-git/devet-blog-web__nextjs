@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
-export default function Custom404() {
+export default function Custom500() {
 	return (
 		<>
 			<Head>

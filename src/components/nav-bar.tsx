@@ -6,17 +6,22 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import pagePaths from '@/constants/page-path'
 import { classNames } from '@/utils/html-class'
-
+import { useSelector, useDispatch } from 'react-redux'
+import { RootState } from '@/redux/store'
+import { selectIsAuth, setIsAuth } from '@/redux/authSlice'
+import { Button } from '@mui/base'
+import authService from '@/services/auth'
+import notify from '@/configs/notify'
+import { redirectTo } from '@/utils/browser'
 const menuItems = {
 	forGuest: [
-		{ name: "Resgister", href: pagePaths.auth.register },
-		{ name: "Login", href: pagePaths.auth.login },
+		{ name: "Resgister", href: pagePaths.auth.REGISTER },
+		{ name: "Login", href: pagePaths.auth.LOGIN },
 	],
 	forUser: [
 		{ name: "My profile", href: "#" },
 		{ name: "Setting", href: "#" },
-		{ name: "Sign out", href: "#" },
-		{ name: "Create your article", href: pagePaths.createArticle },
+		{ name: "Create article", href: pagePaths.createArticle },
 	],
 }
 
@@ -24,13 +29,22 @@ export default function NavBar() {
 	const router = useRouter()
 	const currentPath = router.asPath;
 	const { articleId } = router.query;
+	const isAuth = useSelector(selectIsAuth)
+	const dispatch = useDispatch();
 
 	const navigation = [
 		{ name: 'Home', href: pagePaths.home, current: currentPath === pagePaths.home },
 		{ name: 'Feeds', href: pagePaths.article, current: [pagePaths.article, pagePaths.articleContent(articleId)].includes(currentPath) },
-		{ name: 'Post article', href: pagePaths.createArticle, current: currentPath === pagePaths.createArticle },
+		// { name: 'Post article', href: pagePaths.createArticle, current: currentPath === pagePaths.createArticle },
 		{ name: 'About me', href: pagePaths.me.intro, current: currentPath === pagePaths.me.intro },
 	]
+
+	const handleLogout = () => {
+		authService.logout()
+		dispatch(setIsAuth(false))
+		notify.info("You're logged out. Redirecting...")
+		redirectTo({ router, path: pagePaths.auth.LOGIN })
+	}
 	return (
 		<Disclosure as="nav" className="bg-gray-100 sticky top-0 z-30 backdrop-blur-sm bg-opacity-75">
 			{({ open }) => (
@@ -116,7 +130,7 @@ export default function NavBar() {
 										leaveTo="transform opacity-0 scale-95"
 									>
 										<Menu.Items className="absolute right-0 z-30 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-											{("user" === "user" ? menuItems.forGuest : menuItems.forUser).map((menuItem, index) => (
+											{(isAuth ? menuItems.forUser : menuItems.forGuest).map((menuItem, index) => (
 												<Menu.Item key={index}>
 													{({ active }) => (
 														<Link
@@ -128,6 +142,15 @@ export default function NavBar() {
 													)}
 												</Menu.Item>
 											))}
+											{isAuth && (
+												<Menu.Item >
+													<Button
+														className={classNames('w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-red-200')}
+														onClick={handleLogout}
+													>
+														Logout</Button>
+												</Menu.Item>
+											)}
 										</Menu.Items>
 									</Transition>
 								</Menu>
