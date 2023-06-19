@@ -6,8 +6,15 @@ import localStorageNames from "@/constants/local-storage-names";
 type AuthStateType = {
 	isAuth: boolean
 }
+
+const checkIsAuth = (): boolean => {
+	if (typeof window !== "undefined" && localStorage.getItem(localStorageNames.JWT_TOKEN)) {
+		return true;
+	}
+	return false;
+}
 const initialState: AuthStateType = {
-	isAuth: (typeof window !== "undefined" && localStorage.getItem(localStorageNames.JWT_TOKEN)) ? true : false
+	isAuth: checkIsAuth()
 }
 
 const authSlice = createSlice({
@@ -19,11 +26,16 @@ const authSlice = createSlice({
 		},
 
 	},
-	extraReducers: {
-		[HYDRATE]: (state, action) => {
-			return { ...state, ...action.payload }
-		}
-	},
+	// extraReducers(builder) {
+	// 	return builder.addCase(HYDRATE, (state, action) => {
+	// 		return { ...state, ...action }
+	// 	})
+	// },
+	// extraReducers: {
+	// 	[HYDRATE]: (state, action) => {
+	// 		return { ...state, ...action.payload }
+	// 	}
+	// },
 })
 
 

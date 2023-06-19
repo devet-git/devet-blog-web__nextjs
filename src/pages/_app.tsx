@@ -23,8 +23,8 @@ function App(props: any): any {
 	const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
 	const theme = createdTheme()
 	const getLayout = Component.getLayout || ((page: ReactElement) => page);
-	useNProgress();
 
+	useNProgress();
 
 	return getLayout(
 		<>
