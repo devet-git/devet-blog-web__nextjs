@@ -1,65 +1,197 @@
-import { Button } from '@mui/material';
-import { ReactElement, useEffect, useState, useRef } from 'react';
-import 'react-quill/dist/quill.snow.css';
-import dynamic from 'next/dynamic'
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
+import dynamic from 'next/dynamic';
+import { Button, Card, CardActions, CardContent, CardHeader, Divider, TextField } from '@mui/material';
+import { useEffect, useState, useRef } from 'react';
 import DOMPurify from 'dompurify'
 import MainLayout from '@/layouts/main-layout';
-import withAuth from '@/middlewares/with-auth';
 import { GetServerSideProps, NextPage } from 'next';
+import withAuth from '@/middlewares/with-auth';
+import TurndownService from 'turndown';
+import 'suneditor/dist/css/suneditor.min.css'; // Import Sun Editor's CSS File
+import sunEditorConfig from '@/configs/suneditor';
+import SunEditorCore from "suneditor/src/lib/core";
+import { useFormik } from 'formik';
+const SunEditor = dynamic(() => import("suneditor-react"), {
+	ssr: false,
+});
+import * as Yup from "yup"
+import { classNames } from '@/utils/html-class';
+import { UploadBeforeHandler, UploadBeforeReturn } from 'suneditor-react/dist/types/upload';
+import fileService from '@/services/file';
+import articleService, { CreateArticleParams } from '@/services/article';
 
-
-const toolbarOptions = [
-	['bold', 'italic', 'underline', 'strike'],
-	[{ 'align': [] }],
-	['blockquote', 'code-block'],
-	// [{ 'header': 1 }, { 'header': 2 }],
-	[{ 'list': 'ordered' }, { 'list': 'bullet' }],
-	[{ 'script': 'sub' }, { 'script': 'super' }],
-	[{ 'indent': '-1' }, { 'indent': '+1' }],
-	// [{ 'direction': 'rtl' }],
-	[{ 'size': ['small', false, 'large', 'huge'] }],
-	[{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-	["link", "image", "video"],
-	[{ 'color': [] }, { 'background': [] }],
-	// [{ 'font': [] }],
-	['clean'],// clean formatting button
-]
 type Props = {
 	name: string
 }
+/**
+* Convert HTML to Markdown
+* @date 6/21/2023 - 8:56:11 AM
+*
+* @param {string} html
+* @returns {string}
+*/
+export const htmlToMarkdown = (html: string): string => {
+	const turndownService = new TurndownService();
+	const cleanedValue = DOMPurify.sanitize(html) //TODO: clean HTML
+	const markdown = turndownService.turndown(cleanedValue)
+	return markdown;
+}
+
 const Page: NextPage<Props> = ({ name }) => {
-	const [value, setValue] = useState('');
-	const handlePost = () => {
-		const cleanedValue = DOMPurify.sanitize(value)
-		//CAll API
+
+	const [imgIdsOfArticle, setImgIdsOfArticle] = useState<string[]>([])
+	const [editorContent, setEditorContent] = useState<string>('');
+	const editorRef = useRef<SunEditorCore>()
+	const formik = useFormik({
+		initialValues: {
+			title: '',
+			authors: '',
+			description: ''
+		},
+		validationSchema: Yup.object({
+			title: Yup.string().min(10).max(255).required("Title is required"),
+			// authors: Yup.string().min(8).max(255).required("Password is required"),
+		}),
+		onSubmit: async (values, helpers) => {
+			try {
+				const { title, authors, description } = values;
+				const content = editorRef.current?.getContents(false);
+				handlePostArticle({
+					title,
+					authors: [authors],
+					description,
+					content: content || ''
+				})
+			} catch (err) {
+				helpers.setStatus({ success: false });
+				// helpers.setErrors({ submit: err.message });
+				helpers.setSubmitting(false);
+			}
+		},
+	})
+	const getEditorInstance = (editor: SunEditorCore) => {
+		editorRef.current = editor
 	}
+	const onEditorChange = (content: string) => { setEditorContent(content) }
+
+	/**
+	 * Replace src of image when insert: an url from API instead data:base64
+	 * @date 6/20/2023 - 10:17:45 PM
+	 *
+	 * @param {File[]} files
+	 * @param {object} info
+	 * @param {UploadBeforeHandler} uploadHandler
+	 * @returns {UploadBeforeReturn}
+	 */
+	const handleImageUploadBefore = (files: File[], info: object, uploadHandler: UploadBeforeHandler): UploadBeforeReturn => {
+		(async () => {
+			const apiRes = await fileService.upload(files[0])
+			const { url, publicId } = apiRes.data[0];
+			console.log(apiRes);
+
+			setImgIdsOfArticle(prev => [...prev, publicId])
+			editorRef.current?.insertHTML(`<img name="${publicId}" src="${url}" />`);
+		})()
+		return false;
+	}
+	/**
+	 * Post article: get content from editor and send to API
+	 * @date 6/21/2023 - 8:48:05 AM
+	 *
+	 * @async
+	 * @returns {*}
+	 */
+	const handlePostArticle = async (params: CreateArticleParams) => {
+		imgIdsOfArticle.forEach(async (imgId) => {
+			(!params.content.includes(imgId)) && await fileService.deleteById(imgId)
+		})
+		const apiRes = await articleService.create(params)
+		if (apiRes.statusCode === 200) {
+			formik.resetForm()
+			editorRef.current?.setContents('');
+
+		}
+		console.log(apiRes);
+
+		// console.log(imgIdsOfArticle);
+		// console.log(content);
+	}
+
+
+
 	return (
 		<MainLayout>
-			<div className='relative'>
-				{typeof window !== 'undefined' && (
-					<ReactQuill
-						theme="snow"
-						value={value}
-						onChange={setValue}
-						className='min-h-[85vh] overflow-y-auto mt-[10vh] bg-white [&_.ql-toolbar]:z-10'
-						modules={{
-							toolbar: { container: toolbarOptions },
-						}}
-						placeholder='Type your content...'
-					/>
-				)}
-				{/* <div dangerouslySetInnerHTML={{ __html: value }} /> */}
-				<button
-					onClick={handlePost}
-					className='fixed lg:top-[calc(10vh+10px)] md:top-[calc(10vh+30px)] right-5 z-10 inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-black to-cyan-300 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800'
-				>
-					<span className="relative px-4 py-1 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-						Post
-						{/* {name} */}
-					</span>
-				</button>
-			</div>
+			<form onSubmit={formik.handleSubmit} className='px-5 py-2'>
+				<Card className='w-full'>
+					<CardContent className='grid grid-flow-col gap-x-2'>
+						<TextField
+							id="articleTitle"
+							name="title"
+							type="text"
+							label="Title"
+							autoComplete="title"
+							autoFocus
+							error={!!(formik.touched.title && formik.errors.title)}
+							helperText={formik.touched.title && formik.errors.title}
+							onBlur={formik.handleBlur}
+							onChange={formik.handleChange}
+							value={formik.values.title}
+							required
+						/>
+						<TextField
+							id="authors"
+							name="authors"
+							type="text"
+							label="Author"
+							autoComplete="author"
+							error={!!(formik.touched.authors && formik.errors.authors)}
+							helperText={formik.touched.authors && formik.errors.authors}
+							onBlur={formik.handleBlur}
+							onChange={formik.handleChange}
+							value={formik.values.authors}
+						/>
+						<TextField
+							id="description"
+							name="description"
+							type="text"
+							label="Description"
+							autoComplete="description"
+							error={!!(formik.touched.description && formik.errors.description)}
+							helperText={formik.touched.description && formik.errors.description}
+							onBlur={formik.handleBlur}
+							onChange={formik.handleChange}
+							value={formik.values.description}
+						/>
+					</CardContent>
+					<Divider />
+					<CardActions className={classNames(
+						(!editorContent || editorContent === `<p><br></p>` || !formik.isValid) && "hidden",
+						"flex justify-end pr-6"
+					)}
+					>
+						<Button
+							variant="outlined"
+							type="submit"
+						>
+							Post
+						</Button>
+					</CardActions>
+				</Card>
+			</form>
+
+			<section className='px-5'>
+				<SunEditor
+					disable={!formik.isValid}
+					name='editor'
+					placeholder="Please type here..."
+					setOptions={{
+						buttonList: sunEditorConfig.toolbar,
+					}}
+					getSunEditorInstance={getEditorInstance}
+					setContents={editorContent}
+					onChange={onEditorChange}
+					onImageUploadBefore={handleImageUploadBefore}
+				/>
+			</section>
 		</MainLayout>
 	);
 }

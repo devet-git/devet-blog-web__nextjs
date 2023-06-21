@@ -1,0 +1,14 @@
+.sun-editor {
+	border: 1px solid red;
+	border-radius: 10px;
+	overflow: hidden;
+	/* padding: 10px; */
+}
+
+.se-wrapper-inner {
+	min-height: 45vh !important;
+}
+
+.se-navigation {
+	padding: 10px !important;
+}

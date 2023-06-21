@@ -1,5 +1,6 @@
 import localStorageNames from "@/constants/local-storage-names";
 import pagePaths from "@/constants/page-path";
+import { isJwtExpired } from "@/utils/jwt";
 import { useRouter } from "next/router";
 import { useEffect, useState } from 'react'
 
@@ -15,7 +16,6 @@ const AuthGuard = (props: any) => {
 	// Only do authentication check on component mount.
 	// This flow allows you to manually redirect the user after sign-out, otherwise this will be
 	// triggered and will automatically redirect to sign-in page.
-	const jwtToken = typeof window !== "undefined" ? localStorage.getItem(localStorageNames.JWT_TOKEN) : null
 
 	useEffect(() => {
 		if (!router.isReady) {
@@ -29,8 +29,9 @@ const AuthGuard = (props: any) => {
 
 		// ignore.current = true;
 
-		if (!jwtToken) {
-			console.log('Not authenticated, redirecting');
+		if (isJwtExpired()) {
+			localStorage.clear();
+			console.log('Not authenticated, redirecting...');
 			router
 				.replace({
 					pathname: pagePaths.auth.LOGIN,

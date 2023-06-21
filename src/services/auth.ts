@@ -32,8 +32,8 @@ const authService = {
 				const { token, userId } = res.data.data
 				localStorage.setItem(localStorageNames.JWT_TOKEN, token)
 				localStorage.setItem(localStorageNames.USER_ID, userId)
+				return res.data;
 			}
-			return res.data;
 		} catch (error) {
 			apiErrorHandler(error);
 		}

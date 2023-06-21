@@ -2,12 +2,15 @@ import { createSlice } from "@reduxjs/toolkit"
 import { RootState } from "./store";
 import { HYDRATE } from "next-redux-wrapper"
 import localStorageNames from "@/constants/local-storage-names";
+import { isJwtExpired } from "@/utils/jwt";
 
 type AuthStateType = {
 	isAuth: boolean
 }
+
+
 const initialState: AuthStateType = {
-	isAuth: (typeof window !== "undefined" && localStorage.getItem(localStorageNames.JWT_TOKEN)) ? true : false
+	isAuth: !isJwtExpired()
 }
 
 const authSlice = createSlice({
@@ -19,11 +22,16 @@ const authSlice = createSlice({
 		},
 
 	},
-	extraReducers: {
-		[HYDRATE]: (state, action) => {
-			return { ...state, ...action.payload }
-		}
-	},
+	// extraReducers(builder) {
+	// 	return builder.addCase(HYDRATE, (state, action) => {
+	// 		return { ...state, ...action }
+	// 	})
+	// },
+	// extraReducers: {
+	// 	[HYDRATE]: (state, action) => {
+	// 		return { ...state, ...action.payload }
+	// 	}
+	// },
 })
 
 
