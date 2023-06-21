@@ -16,44 +16,31 @@ const SunEditor = dynamic(() => import("suneditor-react"), {
 import * as Yup from "yup"
 import { classNames } from '@/utils/html-class';
 import { UploadBeforeHandler, UploadBeforeReturn } from 'suneditor-react/dist/types/upload';
+import fileService from '@/services/file';
+import articleService, { CreateArticleParams } from '@/services/article';
 
 type Props = {
 	name: string
 }
+/**
+* Convert HTML to Markdown
+* @date 6/21/2023 - 8:56:11 AM
+*
+* @param {string} html
+* @returns {string}
+*/
+export const htmlToMarkdown = (html: string): string => {
+	const turndownService = new TurndownService();
+	const cleanedValue = DOMPurify.sanitize(html) //TODO: clean HTML
+	const markdown = turndownService.turndown(cleanedValue)
+	return markdown;
+}
 
 const Page: NextPage<Props> = ({ name }) => {
-	const turndownService = new TurndownService();
 
-	// TODO: editor config
+	const [imgIdsOfArticle, setImgIdsOfArticle] = useState<string[]>([])
 	const [editorContent, setEditorContent] = useState<string>('');
 	const editorRef = useRef<SunEditorCore>()
-	const getEditorInstance = (editor: SunEditorCore) => {
-		editorRef.current = editor
-	}
-	const handlePost = () => {
-		if (editorRef.current) {
-			const content = editorRef.current.getContents(false);
-			const cleanedContent = DOMPurify.sanitize(content) //TODO: clean HTML
-			const markdown = turndownService.turndown(cleanedContent)
-			// console.log(editorContent);
-			// console.log(markdown);
-		}
-	}
-	const onEditorChange = (content: string) => { setEditorContent(content) }
-	const handleImageUploadBefore = (files: File[], info: object, uploadHandler: UploadBeforeHandler): UploadBeforeReturn => {
-		// uploadHandler is a function
-		console.log(files, info)
-		setEditorContent(prevContent => prevContent + "hahah")
-		return true;
-	}
-	const handleImageUpload = (targetImgElement: any, index: any, state: any, imageInfo: any, remainingFilesCount: any) => {
-		// console.log(targetImgElement, index, state, imageInfo, remainingFilesCount)
-		setEditorContent(prevContent => prevContent + "hahah")
-		console.log(editorContent);
-
-
-	}
-	//TODO: formik
 	const formik = useFormik({
 		initialValues: {
 			title: '',
@@ -66,7 +53,14 @@ const Page: NextPage<Props> = ({ name }) => {
 		}),
 		onSubmit: async (values, helpers) => {
 			try {
-				handlePost()
+				const { title, authors, description } = values;
+				const content = editorRef.current?.getContents(false);
+				handlePostArticle({
+					title,
+					authors: [authors],
+					description,
+					content: content || ''
+				})
 			} catch (err) {
 				helpers.setStatus({ success: false });
 				// helpers.setErrors({ submit: err.message });
@@ -74,6 +68,56 @@ const Page: NextPage<Props> = ({ name }) => {
 			}
 		},
 	})
+	const getEditorInstance = (editor: SunEditorCore) => {
+		editorRef.current = editor
+	}
+	const onEditorChange = (content: string) => { setEditorContent(content) }
+
+	/**
+	 * Replace src of image when insert: an url from API instead data:base64
+	 * @date 6/20/2023 - 10:17:45 PM
+	 *
+	 * @param {File[]} files
+	 * @param {object} info
+	 * @param {UploadBeforeHandler} uploadHandler
+	 * @returns {UploadBeforeReturn}
+	 */
+	const handleImageUploadBefore = (files: File[], info: object, uploadHandler: UploadBeforeHandler): UploadBeforeReturn => {
+		(async () => {
+			const apiRes = await fileService.upload(files[0])
+			const { url, publicId } = apiRes.data[0];
+			console.log(apiRes);
+
+			setImgIdsOfArticle(prev => [...prev, publicId])
+			editorRef.current?.insertHTML(`<img name="${publicId}" src="${url}" />`);
+		})()
+		return false;
+	}
+	/**
+	 * Post article: get content from editor and send to API
+	 * @date 6/21/2023 - 8:48:05 AM
+	 *
+	 * @async
+	 * @returns {*}
+	 */
+	const handlePostArticle = async (params: CreateArticleParams) => {
+		imgIdsOfArticle.forEach(async (imgId) => {
+			(!params.content.includes(imgId)) && await fileService.deleteById(imgId)
+		})
+		const apiRes = await articleService.create(params)
+		if (apiRes.statusCode === 200) {
+			formik.resetForm()
+			editorRef.current?.setContents('');
+
+		}
+		console.log(apiRes);
+
+		// console.log(imgIdsOfArticle);
+		// console.log(content);
+	}
+
+
+
 	return (
 		<MainLayout>
 			<form onSubmit={formik.handleSubmit} className='px-5 py-2'>
@@ -133,19 +177,19 @@ const Page: NextPage<Props> = ({ name }) => {
 					</CardActions>
 				</Card>
 			</form>
+
 			<section className='px-5'>
 				<SunEditor
-					getSunEditorInstance={getEditorInstance}
 					disable={!formik.isValid}
 					name='editor'
 					placeholder="Please type here..."
 					setOptions={{
 						buttonList: sunEditorConfig.toolbar,
 					}}
+					getSunEditorInstance={getEditorInstance}
 					setContents={editorContent}
 					onChange={onEditorChange}
 					onImageUploadBefore={handleImageUploadBefore}
-					onImageUpload={handleImageUpload}
 				/>
 			</section>
 		</MainLayout>

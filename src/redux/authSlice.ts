@@ -2,19 +2,15 @@ import { createSlice } from "@reduxjs/toolkit"
 import { RootState } from "./store";
 import { HYDRATE } from "next-redux-wrapper"
 import localStorageNames from "@/constants/local-storage-names";
+import { isJwtExpired } from "@/utils/jwt";
 
 type AuthStateType = {
 	isAuth: boolean
 }
 
-const checkIsAuth = (): boolean => {
-	if (typeof window !== "undefined" && localStorage.getItem(localStorageNames.JWT_TOKEN)) {
-		return true;
-	}
-	return false;
-}
+
 const initialState: AuthStateType = {
-	isAuth: checkIsAuth()
+	isAuth: !isJwtExpired()
 }
 
 const authSlice = createSlice({
