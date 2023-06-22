@@ -5,7 +5,8 @@ export type CreateArticleParams = {
 	title: string,
 	authors: string[],
 	description: string,
-	content: string
+	content: string,
+	images: string[]
 }
 const articleService = {
 	async create(article: CreateArticleParams) {
@@ -17,9 +18,9 @@ const articleService = {
 			apiErrorHandler(error);
 		}
 	},
-	async getAll() {
+	async getAll(pageNumber: string | number) {
 		try {
-			const res = await api.get(apiEndpoints.article.GET_ALL)
+			const res = await api.get(apiEndpoints.article.GET_ALL(pageNumber, 6))
 			return res.data || null;
 
 		} catch (error) {

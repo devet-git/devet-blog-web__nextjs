@@ -24,6 +24,7 @@ export default function ArticleList({ articles }: Props) {
 							title={article.title}
 							postTime={article.createdDate}
 							description={article.description}
+							posterName={article.poster.email}
 						/>
 					))}
 				</div>

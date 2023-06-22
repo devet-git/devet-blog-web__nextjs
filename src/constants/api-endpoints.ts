@@ -8,14 +8,14 @@ const apiEndpoints = {
 	file: {
 		UPLOAD: '/files',
 		GET_ALL: 'files',
-		DELETE_BY_ID: (id: string) => '/files/' + id
+		DELETE_BY_ID: (id: string) => `/files/${id}`
 	},
 	article: {
 		CREATE: '/articles',
-		SEARCH: (keyword: string) => '/articles/search?keyword=' + keyword,
-		GET_ALL: '/articles?pageNumber=1&pageSize=10&sortBy=title',
-		GET_BY_ID: (id: string) => '/articles/' + id,
-		DELETE_BY_ID: (id: string) => '/articles/' + id
+		SEARCH: (keyword: any) => `/articles/search?keyword=${keyword}`,
+		GET_ALL: (pageNumber: any, pageSize: any) => `/articles?pageNumber=${pageNumber.toString()}&pageSize=${pageSize}&sortBy=title`,
+		GET_BY_ID: (id: string) => `/articles/${id}`,
+		DELETE_BY_ID: (id: string) => `/articles/${id}`
 	}
 }
 

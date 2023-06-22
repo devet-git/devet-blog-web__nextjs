@@ -9,7 +9,7 @@ const navBarConfig = {
 		forUser: [
 			{ name: "My profile", href: "#" },
 			{ name: "Setting", href: "#" },
-			{ name: "Create article", href: pageRoutes.createArticle },
+			{ name: "Create article", href: pageRoutes.article.CREATE },
 		],
 	}
 }

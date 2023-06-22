@@ -1,5 +1,5 @@
 import ArticleComment from "@/components/article/comment";
-import ArticleCommentForm from "@/components/article/comment -form";
+import ArticleCommentForm from "@/components/article/comment-form";
 import { ArticlePageProps } from "@/components/article/preview";
 import ArticleRelatedList from "@/components/article/related-list";
 import SignupEmailNotification from "@/components/article/signup-email-notification";
@@ -13,6 +13,7 @@ import { GetServerSideProps, NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import Custom404 from "../404";
 
 
 
@@ -21,6 +22,7 @@ type Props = {
 }
 /* eslint-disable @next/next/no-img-element */
 const Page: NextPage<Props> = ({ article }) => {
+	if (!article) return <Custom404 />
 
 	const PosterInfo = () => (
 		<header className="mb-4 lg:mb-6 not-format">
@@ -34,7 +36,7 @@ const Page: NextPage<Props> = ({ article }) => {
 						height={100}
 					/>
 					<div>
-						<a href="#" rel="author" className="text-xl font-bold text-gray-900 dark:text-white">Jese Leos</a>
+						<a href="#" rel="author" className="text-xl font-bold text-gray-900 dark:text-white">{article.poster.email}</a>
 						<p className="text-base font-light text-gray-500 dark:text-gray-400">Graphic Designer, educator & CEO Flowbite</p>
 						<p className="text-base font-light text-gray-500 dark:text-gray-400">
 							{dateTimeUtils.format(article.createdDate)}
@@ -64,7 +66,7 @@ const Page: NextPage<Props> = ({ article }) => {
 					</article>
 				</div>
 			</main>
-			<ArticleRelatedList />
+			<ArticleRelatedList articles={[article]} />
 			{/* <SignupEmailNotification /> */}
 		</MainLayout>
 	)
@@ -72,11 +74,19 @@ const Page: NextPage<Props> = ({ article }) => {
 export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
 	const { query } = context;
 	if (query && query.articleId) {
-		const apiRes = await api.get(apiEndpoints.article.GET_BY_ID(query.articleId as string))
-		const article = apiRes.data.data;
-		return {
-			props: {
-				article
+		try {
+			const apiRes = await api.get(apiEndpoints.article.GET_BY_ID(query.articleId as string))
+			const article = apiRes.data.data;
+			return {
+				props: {
+					article
+				}
+			}
+		} catch (error) {
+			return {
+				props: {
+					article: null
+				}
 			}
 		}
 	}

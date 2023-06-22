@@ -1,9 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 
-import Link from "next/link";
-import ArticlePreview from "./preview";
-import pageRoutes from "@/constants/page-path";
-
 export default function ArticleComment() {
 	return (
 		<>

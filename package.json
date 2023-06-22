@@ -51,6 +51,8 @@
 		"yup": "^1.2.0"
 	},
 	"devDependencies": {
+		"@babel/plugin-transform-runtime": "^7.22.5",
+		"@babel/runtime": "^7.22.5",
 		"@types/dompurify": "^3.0.2",
 		"@types/turndown": "^5.0.1"
 	}
