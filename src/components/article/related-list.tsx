@@ -9,7 +9,7 @@ type Props = {
 	category?: Categories[],
 	posterName?: string
 }
-export default function ArticleRelatedCollection(props: Props) {
+export default function ArticleRelatedList(props: Props) {
 	const { postTime, title, description, posterName } = props;
 	return (
 		<aside aria-label="Related articles" className="py-8 lg:py-24 bg-gray-50 dark:bg-gray-800">

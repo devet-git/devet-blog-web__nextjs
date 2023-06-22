@@ -86,7 +86,7 @@ const Page: NextPage<Props> = ({ name }) => {
 		(async () => {
 			const apiRes = await fileService.upload(files[0])
 			const { url, publicId } = apiRes.data[0];
-			console.log(apiRes);
+			// console.log(apiRes);
 
 			setImgIdsOfArticle(prev => [...prev, publicId])
 			editorRef.current?.insertHTML(`<img name="${publicId}" src="${url}" />`);
@@ -110,12 +110,10 @@ const Page: NextPage<Props> = ({ name }) => {
 			editorRef.current?.setContents('');
 
 		}
-		console.log(apiRes);
-
+		// console.log(apiRes);
 		// console.log(imgIdsOfArticle);
 		// console.log(content);
 	}
-
 
 
 	return (
@@ -195,12 +193,5 @@ const Page: NextPage<Props> = ({ name }) => {
 		</MainLayout>
 	);
 }
-// export const getServerSideProps: GetServerSideProps<Repo> = async () => {
-// 	return {
-// 		props: {
-// 			name: "haha"
-// 		}
-// 	}
-// }
 
 export default withAuth(Page)

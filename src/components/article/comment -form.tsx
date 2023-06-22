@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import ArticlePreview from "./preview";
-import pagePaths from "@/constants/page-path";
+import pageRoutes from "@/constants/page-path";
 
 export default function ArticleCommentForm() {
 	return (

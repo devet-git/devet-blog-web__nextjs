@@ -1,5 +1,5 @@
 
-const pagePaths = {
+const pageRoutes = {
 	privates: [],
 	auth: {
 		LOGIN: "/auth/login",
@@ -14,4 +14,4 @@ const pagePaths = {
 	articleContent: (articleId: string | number | string[] | undefined) => '/articles/' + articleId?.toString()
 }
 
-export default pagePaths;
+export default pageRoutes;

@@ -1,6 +1,6 @@
 import notify from "@/configs/notify";
 import localStorageNames from "@/constants/local-storage-names";
-import pagePaths from "@/constants/page-path";
+import pageRoutes from "@/constants/page-path";
 import Custom404 from "@/pages/404";
 import { isJwtExpired } from "@/utils/jwt";
 import { useRouter } from "next/router";
@@ -23,7 +23,7 @@ const NoAuthGuard = (props: any) => {
 			console.log('Authenticated, redirecting');
 			notify.info("Authenticated, redirecting")
 			setTimeout(() => {
-				router.replace({ pathname: pagePaths.home }).catch(console.error);
+				router.replace({ pathname: pageRoutes.home }).catch(console.error);
 			}, 2000);
 
 		} else {

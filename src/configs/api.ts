@@ -1,10 +1,10 @@
 import axios from "axios";
 import localStorageNames from "@/constants/local-storage-names";
-import endpoints from "@/constants/endpoints";
+import apiEndpoints from "@/constants/api-endpoints";
 import { isJwtExpired } from "@/utils/jwt";
 
 const api = axios.create({
-	baseURL: endpoints.BASE,
+	baseURL: apiEndpoints.BASE,
 	headers: {
 		'Content-Type': 'application/json'
 	}

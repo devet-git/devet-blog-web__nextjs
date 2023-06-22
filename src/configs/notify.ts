@@ -6,13 +6,13 @@ function success(message: string = "Successfully") {
 		persist: false,
 	});
 }
-function info(message: string = "Successfully") {
+function info(message: string) {
 	return enqueueSnackbar(message, {
 		variant: "info",
 		persist: false,
 	});
 }
-function warning(message: string = "Successfully") {
+function warning(message: string) {
 	return enqueueSnackbar(message, {
 		variant: "warning",
 		persist: false,
