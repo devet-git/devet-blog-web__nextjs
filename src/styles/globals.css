@@ -30,3 +30,13 @@ body {
 			transparent,
 			rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
 }
+
+table,
+th,
+td {
+	border: 1px solid;
+}
+
+ol {
+	list-style: decimal;
+}

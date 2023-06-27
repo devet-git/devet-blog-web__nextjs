@@ -1,5 +1,5 @@
 import api from "@/configs/api";
-import endpoints from "@/constants/endpoints";
+import apiEndpoints from "@/constants/api-endpoints";
 import localStorageNames from "@/constants/local-storage-names";
 import apiErrorHandler from "@/handlers/apiError";
 export interface UserLogin {
@@ -14,7 +14,7 @@ export interface UserRegister {
 const authService = {
 	async login(user: UserLogin) {
 		try {
-			const res = await api.post(endpoints.auth.LOGIN, user)
+			const res = await api.post(apiEndpoints.auth.LOGIN, user)
 			if (res.data) {
 				const { token, userId } = res.data.data
 				localStorage.setItem(localStorageNames.JWT_TOKEN, token)
@@ -27,7 +27,7 @@ const authService = {
 	},
 	async register(user: UserRegister) {
 		try {
-			const res = await api.post(endpoints.auth.REGISTER, user)
+			const res = await api.post(apiEndpoints.auth.REGISTER, user)
 			if (res.data) {
 				const { token, userId } = res.data.data
 				localStorage.setItem(localStorageNames.JWT_TOKEN, token)
@@ -39,7 +39,7 @@ const authService = {
 		}
 	},
 	async logout() {
-		const res = await api.get(endpoints.auth.LOGOUT)
+		const res = await api.get(apiEndpoints.auth.LOGOUT)
 		res.status == 200 && localStorage.clear();
 
 		return res.status == 200

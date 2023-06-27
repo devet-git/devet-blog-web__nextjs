@@ -1,5 +1,5 @@
 import localStorageNames from "@/constants/local-storage-names";
-import pagePaths from "@/constants/page-path";
+import pageRoutes from "@/constants/page-path";
 import { isJwtExpired } from "@/utils/jwt";
 import { useRouter } from "next/router";
 import { useEffect, useState } from 'react'
@@ -34,7 +34,7 @@ const AuthGuard = (props: any) => {
 			console.log('Not authenticated, redirecting...');
 			router
 				.replace({
-					pathname: pagePaths.auth.LOGIN,
+					pathname: pageRoutes.auth.LOGIN,
 					query: router.asPath !== '/' ? { continueUrl: router.asPath } : undefined
 				})
 				.catch(console.error);

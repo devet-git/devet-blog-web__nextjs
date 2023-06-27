@@ -7,7 +7,7 @@ import { TextField } from "@mui/material";
 import authService from "@/services/auth";
 import notify from "@/configs/notify";
 import { useRouter } from "next/router";
-import pagePaths from "@/constants/page-path";
+import pageRoutes from "@/constants/page-path";
 import withoutAuth from "@/middlewares/without-auth";
 
 
@@ -20,7 +20,7 @@ function Page() {
 		if (data) {
 			notify.success()
 			setTimeout(() => {
-				router.push(pagePaths.home)
+				router.push(pageRoutes.home)
 			}, 2000);
 		}
 	}

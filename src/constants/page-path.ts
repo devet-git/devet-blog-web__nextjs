@@ -1,17 +1,20 @@
 
-const pagePaths = {
+const pageRoutes = {
 	privates: [],
 	auth: {
 		LOGIN: "/auth/login",
 		REGISTER: "/auth/register",
 	},
 	me: {
-		intro: '/me/introduce'
+		INTRO: '/me/introduce'
 	},
 	home: '/',
-	createArticle: '/articles/create',
-	article: '/articles',
-	articleContent: (articleId: string | number | string[] | undefined) => '/articles/' + articleId?.toString()
+	article: {
+		CREATE: '/articles/create',
+		SHOW: '/articles?page=1',
+		CONTENT: (articleId: string | number | string[] | undefined) => '/articles/' + articleId?.toString(),
+		SEARCH: '/articles/search'
+	},
 }
 
-export default pagePaths;
+export default pageRoutes;

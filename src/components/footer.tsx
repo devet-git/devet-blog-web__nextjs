@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import pagePaths from "@/constants/page-path";
+import pageRoutes from "@/constants/page-path";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -14,7 +14,7 @@ export default function Footer() {
 					</Link>
 					<ul className="flex flex-wrap items-center mb-6 text-sm font-medium text-gray-500 sm:mb-0 dark:text-gray-400">
 						<li>
-							<Link href={pagePaths.me.intro} className="mr-4 hover:underline md:mr-6 ">About me</Link>
+							<Link href={pageRoutes.me.INTRO} className="mr-4 hover:underline md:mr-6 ">About me</Link>
 						</li>
 						<li>
 							<a href="#" className="mr-4 hover:underline md:mr-6">Privacy Policy</a>

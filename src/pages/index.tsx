@@ -1,5 +1,5 @@
 import Categories from "@/components/category/categories";
-import ArticleCollection from "@/components/article/collection";
+import ArticleList from "@/components/article/list";
 import Slider from "@/components/slider";
 import MainLayout from "@/layouts/main-layout";
 
@@ -8,7 +8,7 @@ const Page = () => {
 		<>
 			<Slider />
 			<Categories />
-			<ArticleCollection />
+			{/* <ArticleList  /> */}
 		</>
 	)
 }

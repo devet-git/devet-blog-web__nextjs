@@ -2,6 +2,7 @@ import { enqueueSnackbar } from 'notistack';
 import axios from 'axios';
 import notify from '@/configs/notify';
 
+
 const apiErrorHandler = (error: any) => {
 	if (axios.isAxiosError(error)) {
 		if (error.response) {
@@ -13,7 +14,7 @@ const apiErrorHandler = (error: any) => {
 		} else {
 			// Handle network error
 			// console.log('Network error');
-			notify.error("Network error")
+			notify.error("The API is temporarily down. Please try again later.")
 			return;
 			// throw new Error('Network error');
 		}

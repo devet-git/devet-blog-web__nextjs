@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic';
 import { Button, Card, CardActions, CardContent, CardHeader, Divider, TextField } from '@mui/material';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, SetStateAction } from 'react';
 import DOMPurify from 'dompurify'
 import MainLayout from '@/layouts/main-layout';
 import { GetServerSideProps, NextPage } from 'next';
@@ -18,9 +18,11 @@ import { classNames } from '@/utils/html-class';
 import { UploadBeforeHandler, UploadBeforeReturn } from 'suneditor-react/dist/types/upload';
 import fileService from '@/services/file';
 import articleService, { CreateArticleParams } from '@/services/article';
+import notify from '@/configs/notify';
 
-type Props = {
-	name: string
+type ArticleImage = {
+	id: string,
+	url: string
 }
 /**
 * Convert HTML to Markdown
@@ -36,9 +38,8 @@ export const htmlToMarkdown = (html: string): string => {
 	return markdown;
 }
 
-const Page: NextPage<Props> = ({ name }) => {
-
-	const [imgIdsOfArticle, setImgIdsOfArticle] = useState<string[]>([])
+const Page: NextPage = () => {
+	const [articleImages, setArticleImages] = useState<ArticleImage[]>([])
 	const [editorContent, setEditorContent] = useState<string>('');
 	const editorRef = useRef<SunEditorCore>()
 	const formik = useFormik({
@@ -49,18 +50,14 @@ const Page: NextPage<Props> = ({ name }) => {
 		},
 		validationSchema: Yup.object({
 			title: Yup.string().min(10).max(255).required("Title is required"),
-			// authors: Yup.string().min(8).max(255).required("Password is required"),
 		}),
 		onSubmit: async (values, helpers) => {
 			try {
 				const { title, authors, description } = values;
-				const content = editorRef.current?.getContents(false);
-				handlePostArticle({
-					title,
-					authors: [authors],
-					description,
-					content: content || ''
-				})
+				const content = editorRef.current?.getContents(false) || "";
+				const images = removeImageInCloudFollowContent(content);
+
+				handlePostArticle({ title, authors: [authors], images, description, content })
 			} catch (err) {
 				helpers.setStatus({ success: false });
 				// helpers.setErrors({ submit: err.message });
@@ -83,39 +80,61 @@ const Page: NextPage<Props> = ({ name }) => {
 	 * @returns {UploadBeforeReturn}
 	 */
 	const handleImageUploadBefore = (files: File[], info: object, uploadHandler: UploadBeforeHandler): UploadBeforeReturn => {
-		(async () => {
+
+		files && (async () => {
+			notify.info("Your image is uploading...")
 			const apiRes = await fileService.upload(files[0])
 			const { url, publicId } = apiRes.data[0];
-			console.log(apiRes);
 
-			setImgIdsOfArticle(prev => [...prev, publicId])
-			editorRef.current?.insertHTML(`<img name="${publicId}" src="${url}" />`);
+			setArticleImages(prev => [...prev, { id: publicId, url }])
+			editorRef.current?.insertHTML(`<img name="${publicId}" src="${url}" loading="lazy" />`);
+			notify.success("Your image is upload successfully")
 		})()
 		return false;
 	}
+	const handleImageUpload = (targetImgElement: HTMLImageElement | null, index: any, state: any, imageInfo: { src: string }, remainingFilesCount: any) => {
+		const url = imageInfo?.src;
+		setArticleImages(prev => [...prev, { id: index, url }])
+	}
+	/**
+	 * Remove images in cloud which is not exist in article
+	 * @date 6/27/2023 - 4:08:50 PM
+	 *
+	 * @param {(string | undefined)} content
+	 * @returns {string[]} List of image urls
+	 */
+	const removeImageInCloudFollowContent = (content: string | undefined): string[] => {
+		const realArticleImages: string[] = []
+		articleImages.forEach(async (image) => {
+			if (content && !content.includes(image.url)) {
+				await fileService.deleteById(image.id)
+			} else {
+				realArticleImages.push(image.url)
+			}
+		})
+		return realArticleImages;
+	}
 	/**
 	 * Post article: get content from editor and send to API
-	 * @date 6/21/2023 - 8:48:05 AM
+	 * @date 6/26/2023 - 11:22:36 PM
 	 *
 	 * @async
-	 * @returns {*}
+	 * @param {CreateArticleParams} params
+	 * @returns {Promise<void>}
 	 */
-	const handlePostArticle = async (params: CreateArticleParams) => {
-		imgIdsOfArticle.forEach(async (imgId) => {
-			(!params.content.includes(imgId)) && await fileService.deleteById(imgId)
-		})
+	const handlePostArticle = async (params: CreateArticleParams): Promise<void> => {
+
 		const apiRes = await articleService.create(params)
 		if (apiRes.statusCode === 200) {
 			formik.resetForm()
 			editorRef.current?.setContents('');
-
+			notify.success("Your article have posted successfully")
+			notify.info("We will censor the content as soon as possible")
 		}
-		console.log(apiRes);
-
+		// console.log(apiRes);
 		// console.log(imgIdsOfArticle);
 		// console.log(content);
 	}
-
 
 
 	return (
@@ -185,22 +204,17 @@ const Page: NextPage<Props> = ({ name }) => {
 					placeholder="Please type here..."
 					setOptions={{
 						buttonList: sunEditorConfig.toolbar,
+
 					}}
 					getSunEditorInstance={getEditorInstance}
 					setContents={editorContent}
 					onChange={onEditorChange}
 					onImageUploadBefore={handleImageUploadBefore}
+					onImageUpload={handleImageUpload}
 				/>
 			</section>
 		</MainLayout>
 	);
 }
-// export const getServerSideProps: GetServerSideProps<Repo> = async () => {
-// 	return {
-// 		props: {
-// 			name: "haha"
-// 		}
-// 	}
-// }
 
 export default withAuth(Page)

@@ -6,18 +6,22 @@ import * as Yup from "yup"
 import { TextField } from "@mui/material";
 import authService from "@/services/auth";
 import { useRouter } from "next/router";
-import pagePaths from "@/constants/page-path";
+import pageRoutes from "@/constants/page-path";
 import notify from "@/configs/notify";
 import { NextPage } from "next";
 import withoutAuth from "@/middlewares/without-auth";
 import { setIsAuth } from "@/redux/authSlice";
 import { useDispatch } from "react-redux"
+import { useState } from "react";
+import { classNames } from "@/utils/html-class";
 
 const Page: NextPage = () => {
 	const router = useRouter();
 	const dispatch = useDispatch()
+	const [isCallingApi, setIsCallingApi] = useState<boolean>(false)
 
 	const handleLogin = async (values: any) => {
+		setIsCallingApi(true)
 		const { email, password } = values
 		const data = await authService.login({ email, password })
 		if (data) {
@@ -25,9 +29,10 @@ const Page: NextPage = () => {
 			notify.success() //TODO: show notify
 			//TODO: redirect to home page or before page
 			setTimeout(() => {
-				router.push(router.query.continueUrl?.toString() || pagePaths.home)
+				router.push(router.query.continueUrl?.toString() || pageRoutes.home)
 			}, 2000);
 		}
+		setIsCallingApi(false)
 	}
 
 	const formik = useFormik({
@@ -135,7 +140,11 @@ const Page: NextPage = () => {
 
 						<button
 							type="submit"
-							className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+							className={classNames(
+								"flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-white",
+								isCallingApi ? "bg-gray-300" : " bg-indigo-600 shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+							)}
+							disabled={isCallingApi}
 						>
 							Sign in
 						</button>
