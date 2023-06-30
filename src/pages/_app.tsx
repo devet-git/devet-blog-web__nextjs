@@ -4,12 +4,22 @@ import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 import { createEmotionCache } from "@/utils/create-emotion-cache";
 import "@/styles/globals.css"
 import Head from "next/head";
-import { ReactElement } from "react";
+import { ReactElement, ReactNode } from "react";
 import useNProgress from "@/hooks/use-nprogress";
 import { SnackbarProvider } from "notistack";
-import wrapper from "@/redux/store";
+import wrapper, { persistor } from "@/redux/store";
+import { NextPage } from "next";
+import { AppProps } from "next/app";
+import { PersistGate } from "redux-persist/integration/react";
+import { Provider } from "react-redux";
 
-
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+	getLayout?: (page: ReactElement) => ReactNode
+}
+type AppPropsWithLayout = AppProps & {
+	Component: NextPageWithLayout
+	emotionCache: any
+}
 /**
  * Provide theme for all components
  * @date 6/1/2023 - 11:11:19 PM
@@ -19,7 +29,7 @@ import wrapper from "@/redux/store";
 * @returns {*}
 */
 const clientSideEmotionCache = createEmotionCache();
-function App(props: any): any {
+function App(props: AppPropsWithLayout) {
 	const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
 	const theme = createdTheme()
 	const getLayout = Component.getLayout || ((page: ReactElement) => page);
@@ -43,7 +53,9 @@ function App(props: any): any {
 								horizontal: 'left',
 							}}
 						>
-							<Component {...pageProps} />
+							<PersistGate loading={null} persistor={persistor} >
+								<Component {...pageProps} />
+							</PersistGate>
 						</SnackbarProvider>
 					</ThemeProvider>
 				</StyledEngineProvider>
@@ -51,4 +63,4 @@ function App(props: any): any {
 		</>
 	)
 }
-export default wrapper.withRedux(App);
+export default wrapper.withRedux(App)

@@ -15,6 +15,10 @@ const pageRoutes = {
 		CONTENT: (articleId: string | number | string[] | undefined) => '/articles/' + articleId?.toString(),
 		SEARCH: '/articles/search'
 	},
+	user: {
+		BASE: "/user",
+		INFO: "/user/information",
+	}
 }
 
 export default pageRoutes;

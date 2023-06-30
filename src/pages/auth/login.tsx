@@ -10,7 +10,7 @@ import pageRoutes from "@/constants/page-path";
 import notify from "@/configs/notify";
 import { NextPage } from "next";
 import withoutAuth from "@/middlewares/without-auth";
-import { setIsAuth } from "@/redux/authSlice";
+import { setCurrentUser, setIsAuth } from "@/redux/authSlice";
 import { useDispatch } from "react-redux"
 import { useState } from "react";
 import { classNames } from "@/utils/html-class";
@@ -25,6 +25,7 @@ const Page: NextPage = () => {
 		const { email, password } = values
 		const data = await authService.login({ email, password })
 		if (data) {
+			dispatch(setCurrentUser(data.user))
 			dispatch(setIsAuth(true)); //TODO: set global state
 			notify.success() //TODO: show notify
 			//TODO: redirect to home page or before page

@@ -1,7 +1,8 @@
 import api from "@/configs/api";
 import apiEndpoints from "@/constants/api-endpoints";
-import localStorageNames from "@/constants/local-storage-names";
+import localStorageKeys from "@/constants/local-storage-keys";
 import apiErrorHandler from "@/handlers/apiError";
+import browserUtils from "@/utils/browser";
 export interface UserLogin {
 	email: string,
 	password: string
@@ -16,9 +17,9 @@ const authService = {
 		try {
 			const res = await api.post(apiEndpoints.auth.LOGIN, user)
 			if (res.data) {
-				const { token, userId } = res.data.data
-				localStorage.setItem(localStorageNames.JWT_TOKEN, token)
-				localStorage.setItem(localStorageNames.USER_ID, userId)
+				const { token, user } = res.data.data
+				browserUtils.store.set(localStorageKeys.JWT_TOKEN, token)
+				browserUtils.store.set(localStorageKeys.USER, user)
 			}
 			return res.data;
 		} catch (error) {
@@ -29,9 +30,9 @@ const authService = {
 		try {
 			const res = await api.post(apiEndpoints.auth.REGISTER, user)
 			if (res.data) {
-				const { token, userId } = res.data.data
-				localStorage.setItem(localStorageNames.JWT_TOKEN, token)
-				localStorage.setItem(localStorageNames.USER_ID, userId)
+				const { token, user } = res.data.data
+				browserUtils.store.set(localStorageKeys.JWT_TOKEN, token)
+				browserUtils.store.set(localStorageKeys.USER, user)
 				return res.data;
 			}
 		} catch (error) {

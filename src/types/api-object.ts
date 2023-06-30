@@ -12,5 +12,5 @@ export type User = {
 	id: string,
 	username: string,
 	email: string,
-	fullname: string
+	fullName: string
 }

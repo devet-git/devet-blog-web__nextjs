@@ -15,9 +15,10 @@ import { redirectTo } from '@/utils/browser'
 import articleService from '@/services/article'
 import { Article } from '@/types/api-object'
 import navBarConfig from '@/configs/nav-bar'
+import Hr from './hr'
 
 
-export default function NavBar() {
+export default function NavBar({ className }: { className?: string }) {
 	const router = useRouter()
 	const dispatch = useDispatch();
 	const isAuth = useSelector(selectIsAuth)
@@ -69,7 +70,10 @@ export default function NavBar() {
 	}, [router, searchValue])
 
 	return (
-		<Disclosure as="nav" className="bg-gray-100 sticky top-0 z-30 backdrop-blur-sm bg-opacity-75">
+		<Disclosure as="nav" className={classNames(
+			className,
+			"bg-gray-100 sticky top-0 z-30 backdrop-blur-sm bg-opacity-75")
+		}>
 			{({ open }) => (
 				<>
 					<div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -200,6 +204,7 @@ export default function NavBar() {
 										leaveTo="transform opacity-0 scale-95"
 									>
 										<Menu.Items className="absolute right-0 z-30 mt-2 w-48 origin-top-right rounded-md overflow-hidden bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+											{/* <Menu.Item as={}> <span> thang@gmail.com</span></Menu.Item> */}
 											{(isAuth ? navBarConfig.menuItems.forUser : navBarConfig.menuItems.forGuest).map((menuItem, index) => (
 												<Menu.Item key={index}>
 													{({ active }) => (
@@ -214,7 +219,7 @@ export default function NavBar() {
 											))}
 											{isAuth && (
 												<>
-													<hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+													<Hr.Basic />
 													<Menu.Item >
 														<Button
 															className={classNames('w-full text-left px-4 py-2 text-sm text-gray-400 hover:bg-red-50 hover:text-red-600')}

@@ -1,9 +1,10 @@
-import localStorageNames from '@/constants/local-storage-names';
+import localStorageKeys from '@/constants/local-storage-keys';
 import jwt from 'jsonwebtoken'
+import browserUtils from './browser';
 
 export const isJwtExpired = (): boolean => {
 	try {
-		const jwtToken = typeof window !== "undefined" && localStorage.getItem(localStorageNames.JWT_TOKEN) || null
+		const jwtToken = browserUtils.store.get(localStorageKeys.JWT_TOKEN)
 		if (!jwtToken) return true;
 		const decoded = jwt.decode(jwtToken, { json: true })
 		if (!decoded || !decoded.exp) return true;
