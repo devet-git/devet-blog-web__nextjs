@@ -127,7 +127,7 @@ const Page: NextPageWithLayout = () => {
 	const handlePostArticle = async (params: CreateArticleParams): Promise<void> => {
 
 		const apiRes = await articleService.create(params)
-		if (apiRes.statusCode === 200) {
+		if (apiRes?.statusCode === 200) {
 			formik.resetForm()
 			editorRef.current?.setContents('');
 			notify.success("Your article have posted successfully")

@@ -6,17 +6,10 @@ import pageRoutes from "@/constants/page-path"
 const Page: NextPageWithLayout = () => {
 	return (
 		<div className="flex h-full justify-center items-center">
-			Please chose tab in the right
+			Account
 		</div>
 	)
 }
-export const getServerSideProps = () => {
-	return {
-		redirect: {
-			destination: pageRoutes.myAccount.INFO,
-			permanent: true
-		}
-	}
-}
+
 Page.getLayout = (page: ReactElement) => (<ProfileLayout>{page}</ProfileLayout>)
 export default Page;

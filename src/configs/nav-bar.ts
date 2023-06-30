@@ -1,5 +1,4 @@
 import pageRoutes from "@/constants/page-path";
-
 const navBarConfig = {
 	menuItems: {
 		forGuest: [
@@ -7,7 +6,6 @@ const navBarConfig = {
 			{ name: "Login", href: pageRoutes.auth.LOGIN },
 		],
 		forUser: [
-			{ name: "My profile", href: pageRoutes.user.BASE },
 			{ name: "Setting", href: "#" },
 			{ name: "Create article", href: pageRoutes.article.CREATE },
 		],

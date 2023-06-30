@@ -1,7 +1,12 @@
+import { classNames } from "@/utils/html-class"
+
+type Props = {
+	className?: string
+}
 const Hr = {
-	Basic: () => {
+	Basic: ({ className }: Props) => {
 		return (
-			<hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+			<hr className={classNames(className, "h-px bg-gray-200 border-0 dark:bg-gray-700")} />
 		)
 	}
 }

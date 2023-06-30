@@ -1,6 +1,6 @@
 import api from "@/configs/api";
 import apiEndpoints from "@/constants/api-endpoints";
-import localStorageKeys from "@/constants/local-storage-keys";
+import storageKeys from "@/constants/local-storage-keys";
 import apiErrorHandler from "@/handlers/apiError";
 import browserUtils from "@/utils/browser";
 export interface UserLogin {
@@ -18,10 +18,11 @@ const authService = {
 			const res = await api.post(apiEndpoints.auth.LOGIN, user)
 			if (res.data) {
 				const { token, user } = res.data.data
-				browserUtils.store.set(localStorageKeys.JWT_TOKEN, token)
-				browserUtils.store.set(localStorageKeys.USER, user)
+				browserUtils.store.set(storageKeys.JWT_TOKEN, token)
+				browserUtils.store.set(storageKeys.USER, user)
+				return res.data;
 			}
-			return res.data;
+			return null
 		} catch (error) {
 			apiErrorHandler(error);
 		}
@@ -31,8 +32,8 @@ const authService = {
 			const res = await api.post(apiEndpoints.auth.REGISTER, user)
 			if (res.data) {
 				const { token, user } = res.data.data
-				browserUtils.store.set(localStorageKeys.JWT_TOKEN, token)
-				browserUtils.store.set(localStorageKeys.USER, user)
+				browserUtils.store.set(storageKeys.JWT_TOKEN, token)
+				browserUtils.store.set(storageKeys.USER, user)
 				return res.data;
 			}
 		} catch (error) {

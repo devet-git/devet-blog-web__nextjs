@@ -14,6 +14,7 @@ const apiEndpoints = {
 		CREATE: '/articles',
 		SEARCH: (keyword: any) => `/articles/search?keyword=${keyword}`,
 		GET_ALL: (pageNumber: any, pageSize: any) => `/articles?pageNumber=${pageNumber.toString()}&pageSize=${pageSize}&sortBy=title`,
+		GET_ALL_BY_USER_ID: (userId: string | any, pageNumber: any, pageSize: any) => `/users/${userId}/articles?pageNumber=${pageNumber.toString()}&pageSize=${pageSize}&sortBy=title`,
 		GET_BY_ID: (id: string) => `/articles/${id}`,
 		DELETE_BY_ID: (id: string) => `/articles/${id}`
 	}

@@ -1,10 +1,14 @@
 import NavBar from "@/components/nav-bar";
+import storageKeys from "@/constants/local-storage-keys";
 import pageRoutes from "@/constants/page-path";
+import withAuth from "@/middlewares/with-auth";
+import { User } from "@/types/api-object";
+import browserUtils from "@/utils/browser";
 import { classNames } from "@/utils/html-class";
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import { BookOpenIcon, InformationCircleIcon, QuestionMarkCircleIcon, UserIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ReactNode, ReactElement } from "react";
+import { ReactNode, ReactElement, useEffect, useState } from "react";
 
 type SidebarType = {
 	name: string,
@@ -16,14 +20,37 @@ type SidebarType = {
 
 const Aside = () => {
 	const router = useRouter();
-	const pathname = router.pathname
+	const { pathname, asPath } = router
+	const [currentUser, setCurrentUser] = useState<User>()
 
+	useEffect(() => {
+		const currentUser = browserUtils.store.get(storageKeys.USER)
+		currentUser && setCurrentUser(currentUser)
+	}, [])
 	const sidebarItems: SidebarType[] = [
 		{
-			name: "Information",
-			path: pageRoutes.user.INFO,
+			name: "General",
+			path: pageRoutes.myAccount.INFO,
 			icon: <InformationCircleIcon width={25} />,
-			current: pathname === pageRoutes.user.INFO
+			current: pathname === pageRoutes.myAccount.INFO
+		},
+		{
+			name: "Post",
+			path: pageRoutes.myAccount.ARTICLES(currentUser?.id),
+			icon: <BookOpenIcon width={25} />,
+			current: asPath === pageRoutes.myAccount.ARTICLES(currentUser?.id)
+		},
+		{
+			name: "Account",
+			path: pageRoutes.myAccount.ACCOUNT,
+			icon: <UserIcon width={25} />,
+			current: pathname === pageRoutes.myAccount.ACCOUNT
+		},
+		{
+			name: "Help & Report",
+			path: pageRoutes.myAccount.HELP,
+			icon: <QuestionMarkCircleIcon width={25} />,
+			current: pathname === pageRoutes.myAccount.HELP
 		}
 	]
 
@@ -44,7 +71,7 @@ const Aside = () => {
 							<Link
 								href={item.path}
 								className={classNames(
-									item.current ? "bg-slate-200" : "hover:bg-gray-100",
+									item.current ? "bg-slate-200 pointer-events-none" : "hover:bg-gray-100",
 									"flex items-center p-2 text-black rounded-lg dark:text-white  dark:hover:bg-gray-700"
 								)}
 							>
@@ -63,14 +90,16 @@ const Aside = () => {
 		</aside >
 	)
 }
-export default function ProfileLayout({ children }: { children: ReactNode }) {
+function ProfileLayout({ children }: { children: ReactNode }) {
+
 	return (
 		<>
 			<NavBar />
 			<Aside />
-			<main className="p-4 sm:ml-64">
+			<main className="px-4 py-5 sm:ml-64">
 				{children}
 			</main>
 		</>
 	)
 }
+export default withAuth(ProfileLayout)

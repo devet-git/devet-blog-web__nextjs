@@ -1,4 +1,4 @@
-import localStorageKeys from "@/constants/local-storage-keys";
+import storageKeys from "@/constants/local-storage-keys";
 import pageRoutes from "@/constants/page-path";
 import { isJwtExpired } from "@/utils/jwt";
 import { useRouter } from "next/router";

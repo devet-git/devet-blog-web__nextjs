@@ -15,9 +15,12 @@ const pageRoutes = {
 		CONTENT: (articleId: string | number | string[] | undefined) => '/articles/' + articleId?.toString(),
 		SEARCH: '/articles/search'
 	},
-	user: {
-		BASE: "/user",
-		INFO: "/user/information",
+	myAccount: {
+		BASE: "/my-account",
+		INFO: `/my-account/information`,
+		ARTICLES: (userId: any) => `/my-account/articles?uid=${userId}`,
+		ACCOUNT: `/my-account/account`,
+		HELP: `/my-account/help&report`
 	}
 }
 

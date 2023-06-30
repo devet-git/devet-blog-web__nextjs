@@ -1,5 +1,5 @@
-const localStorageKeys = {
+const storageKeys = {
 	JWT_TOKEN: "acctkn",
 	USER: "usr"
 }
-export default localStorageKeys;
+export default storageKeys;

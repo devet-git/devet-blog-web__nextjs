@@ -12,6 +12,7 @@ import { NextPage } from "next";
 import { AppProps } from "next/app";
 import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
+import { CookiesProvider } from "react-cookie";
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
 	getLayout?: (page: ReactElement) => ReactNode
@@ -54,7 +55,9 @@ function App(props: AppPropsWithLayout) {
 							}}
 						>
 							<PersistGate loading={null} persistor={persistor} >
-								<Component {...pageProps} />
+								<CookiesProvider>
+									<Component {...pageProps} />
+								</CookiesProvider>
 							</PersistGate>
 						</SnackbarProvider>
 					</ThemeProvider>

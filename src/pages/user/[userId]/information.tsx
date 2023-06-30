@@ -1,109 +1,73 @@
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import { NextPageWithLayout } from "../../_app";
 import ProfileLayout from "@/layouts/profile-layout";
 import Image from "next/image";
-import { useSelector } from "react-redux";
-import { selectCurrentUser } from "@/redux/authSlice";
 import { User } from "@/types/api-object";
+import Hr from "@/components/hr";
+import Link from "next/link";
+import pageRoutes from "@/constants/page-path";
+import browserUtils from "@/utils/browser";
+import storageKeys from "@/constants/local-storage-keys";
+import { useRouter } from "next/router";
+import dateTimeUtils from "@/utils/datetime";
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import { Tooltip } from "@mui/material";
 
 const Page: NextPageWithLayout = () => {
-	// const currentUser = useSelector(selectCurrentUser)
-
+	const router = useRouter();
+	const userId = router.query.userId
+	const currentUser: User = browserUtils.store.get(storageKeys.USER)
 	return (
-		<div className="profile-page bg-red-300">
-
-			<section className="relative block">
-				<div className="absolute top-0 w-full h-full bg-center bg-cover">
-					<span id="blackOverlay" className="w-full h-full absolute opacity-50 bg-black"></span>
-				</div>
-				<div className="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden h-70-px">
-					<svg className="absolute bottom-0 overflow-hidden" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" version="1.1" viewBox="0 0 2560 100" x="0" y="0">
-						<polygon className="text-blueGray-200 fill-current" points="2560 0 2560 100 0 100"></polygon>
-					</svg>
-				</div>
-			</section>
-			<section className="relative py-16 bg-blueGray-200">
-				<div className="container mx-auto px-4 bg-slate-200">
-					<div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
-						<div className="px-6">
-							<div className="flex flex-wrap justify-center">
-								<div className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
-									<div className="relative">
-										<Image
-											alt="..."
-											src="/me.jpg"
-											className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px"
-											width={100}
-											height={100}
-										/>
-									</div>
-								</div>
-								<div className="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
-									<div className="py-6 px-3 mt-32 sm:mt-0">
-										<button className="bg-pink-500 active:bg-pink-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150" type="button">
-											Connect
-										</button>
-									</div>
-								</div>
-								<div className="w-full lg:w-4/12 px-4 lg:order-1">
-									<div className="flex justify-center py-4 lg:pt-4 pt-8">
-										<div className="mr-4 p-3 text-center">
-											<span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">22</span><span className="text-sm text-blueGray-400">Friends</span>
-										</div>
-										<div className="mr-4 p-3 text-center">
-											<span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">10</span><span className="text-sm text-blueGray-400">Photos</span>
-										</div>
-										<div className="lg:mr-4 p-3 text-center">
-											<span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">89</span><span className="text-sm text-blueGray-400">Comments</span>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div className="text-center mt-12">
-								<h3 className="text-4xl font-semibold leading-normal mb-2 text-blueGray-700">
-									Jenna Stones
-								</h3>
-								<div className="text-sm leading-normal mt-0 mb-2 text-blueGray-400 font-bold uppercase">
-									<i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>
-									Los Angeles, California
-								</div>
-								<div className="mb-2 text-blueGray-600 mt-10">
-									<i className="fas fa-briefcase mr-2 text-lg text-blueGray-400"></i>Solution Manager - Creative Tim Officer
-								</div>
-								<div className="mb-2 text-blueGray-600">
-									<i className="fas fa-university mr-2 text-lg text-blueGray-400"></i>University of Computer Science
-								</div>
-							</div>
-							<div className="mt-10 py-10 border-t border-blueGray-200 text-center">
-								<div className="flex flex-wrap justify-center">
-									<div className="w-full lg:w-9/12 px-4">
-										<p className="mb-4 text-lg leading-relaxed text-blueGray-700">
-											An artist of considerable range, Jenna the name taken by
-											Melbourne-raised, Brooklyn-based Nick Murphy writes,
-											performs and records all of his own music, giving it a
-											warm, intimate feel with a solid groove structure. An
-											artist of considerable range.
-										</p>
-										<a href="#pablo" className="font-normal text-pink-500">Show more</a>
-									</div>
-								</div>
-							</div>
+		<div className="profile-page h-[50vh] p-5 px-14 pt-20 rounded bg-cover bg-[url('https://images.unsplash.com/photo-1516687401797-25297ff1462c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8M3x8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=60')]" >
+			<div className="bg-white rounded shadow-md py-2 px-5">
+				<section className="statistic-container -translate-y-12  flex justify-around items-end">
+					<section className="w-2/6 flex gap-5">
+						<div className="flex flex-col items-center w-fit">
+							<span className="text-lg font-bold">1k</span>
+							<span className="text-slate-600">Follower</span>
 						</div>
-					</div>
-				</div>
-				<footer className="relative bg-blueGray-200 pt-8 pb-6 mt-8">
-					<div className="container mx-auto px-4">
-						<div className="flex flex-wrap items-center md:justify-between justify-center">
-							<div className="w-full md:w-6/12 px-4 mx-auto text-center">
-								<div className="text-sm text-blueGray-500 font-semibold py-1">
-									Made with <a href="https://www.creative-tim.com/product/notus-js" className="text-blueGray-500 hover:text-gray-800" target="_blank">Notus JS</a> by <a href="https://www.creative-tim.com" className="text-blueGray-500 hover:text-blueGray-800" target="_blank"> Creative Tim</a>.
-								</div>
-							</div>
+						<Link
+							href={pageRoutes.myAccount.ARTICLES(userId)}
+							className="flex flex-col items-center w-fit"
+						>
+							<span className="text-lg font-bold">23</span>
+							<span className="text-slate-600">Posts</span>
+						</Link>
+						<div className="flex flex-col items-center  w-fit">
+							<span className="text-lg font-bold">23</span>
+							<span className="text-slate-600">Following</span>
 						</div>
+					</section>
+					<div className="relative">
+						<Image
+							className="inline-block rounded-full ring-2 ring-white"
+							src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+							alt=""
+							width={100}
+							height={100}
+						/>
+						<Tooltip title="Change avatar" arrow placement="top-start">
+							<PencilSquareIcon className="w-6 cursor-pointer absolute bottom-0 right-0" />
+						</Tooltip>
 					</div>
-				</footer>
-			</section>
-			{/* {currentUser && <p>{currentUser.fullName}</p>} */}
+					<div className="w-2/6 ">
+						<button className="float-right px-7 py-2 bg-blue-500 font-bold text-white rounded hover:ring-2">
+							Follow
+						</button>
+					</div>
+				</section>
+				<section className="flex flex-col items-center justify-center p-5 pt-0">
+					<h1 className="font-bold text-2xl">{currentUser?.fullName}</h1>
+					<p>{currentUser.email}</p>
+					<p>{dateTimeUtils.format(currentUser.createdDate)}</p>
+					<p className="mt-5">Fullstack developer</p>
+					<p className="">Tay Nguyen University</p>
+				</section>
+				<Hr.Basic />
+				<section className="text-center px-20 py-5">
+					Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis consequuntur nostrum velit quae officia voluptates, expedita sit, error vel sapiente debitis! Porro quibusdam deleniti laudantium eveniet voluptatem nemo blanditiis consequuntur!
+				</section>
+			</div>
 		</div>
 	)
 }

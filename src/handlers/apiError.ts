@@ -7,8 +7,8 @@ const apiErrorHandler = (error: any) => {
 	if (axios.isAxiosError(error)) {
 		if (error.response) {
 			// Handle API response error
-			console.log(error.response.data);
-			notify.error(error.response.data.errors)
+			console.log(error.response.data || "Fetch data from API failed!");
+			notify.error(error.response.data.errors || "Fetch data from API failed!")
 			return;
 			// throw new Error(error.response.data.message);
 		} else {

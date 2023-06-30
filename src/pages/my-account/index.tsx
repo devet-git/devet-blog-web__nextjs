@@ -1,7 +1,7 @@
 import { ReactElement } from "react"
-import { NextPageWithLayout } from "../../_app"
 import ProfileLayout from "@/layouts/profile-layout"
 import pageRoutes from "@/constants/page-path"
+import { NextPageWithLayout } from "../_app"
 
 const Page: NextPageWithLayout = () => {
 	return (

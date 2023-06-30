@@ -9,6 +9,7 @@ export type RootState = ReturnType<typeof rootReducers>
 const persistConfig = {
 	key: 'root',
 	storage,
+	// whitelist: ["userId"]
 }
 const rootReducers = combineReducers({
 	auth: authReducer,

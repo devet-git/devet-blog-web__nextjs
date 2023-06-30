@@ -1,6 +1,6 @@
 import { ChangeEvent, Fragment, KeyboardEvent, KeyboardEventHandler, useCallback, useEffect, useState } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { Bars3Icon, BellIcon, MagnifyingGlassIcon, XMarkIcon, } from '@heroicons/react/24/outline'
+import { Bars3Icon, BellIcon, MagnifyingGlassIcon, PencilSquareIcon, XMarkIcon, } from '@heroicons/react/24/outline'
 import Image from "next/image"
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -11,11 +11,13 @@ import { selectIsAuth, setIsAuth } from '@/redux/authSlice'
 import { Button } from '@mui/base'
 import authService from '@/services/auth'
 import notify from '@/configs/notify'
-import { redirectTo } from '@/utils/browser'
+import browserUtils, { redirectTo } from '@/utils/browser'
 import articleService from '@/services/article'
-import { Article } from '@/types/api-object'
+import { Article, User } from '@/types/api-object'
 import navBarConfig from '@/configs/nav-bar'
 import Hr from './hr'
+import storageKeys from '@/constants/local-storage-keys'
+import { Tooltip } from '@mui/material'
 
 
 export default function NavBar({ className }: { className?: string }) {
@@ -25,6 +27,13 @@ export default function NavBar({ className }: { className?: string }) {
 	const pathName = router.pathname;
 	const [searchValue, setSearchValue] = useState<string>('')
 	const [searchResult, setSearchResult] = useState([])
+	const [currentUser, setCurrentUser] = useState<User>()
+
+	useEffect(() => {
+		const currentUser = browserUtils.store.get(storageKeys.USER)
+		currentUser && setCurrentUser(currentUser)
+	}, [])
+
 	const navigation = [
 		{ name: 'Home', href: pageRoutes.home, current: pathName === pageRoutes.home },
 		{ name: 'Feeds', href: pageRoutes.article.SHOW, current: ["/articles", "/articles/[articleId]"].includes(pathName) },
@@ -36,7 +45,7 @@ export default function NavBar({ className }: { className?: string }) {
 		dispatch(setIsAuth(false))
 		notify.info("You're logged out. Redirecting...")
 		redirectTo({ router, path: pageRoutes.auth.LOGIN })
-	}, [])
+	}, [dispatch, router])
 
 	/**
 	 * Set search state value and call API to search article by title
@@ -53,7 +62,7 @@ export default function NavBar({ className }: { className?: string }) {
 		if (value.length >= 3) {
 			setTimeout(async () => {
 				const apiRes = await articleService.searchByTitle(value)
-				apiRes.data && setSearchResult(apiRes.data)
+				apiRes && setSearchResult(apiRes.data)
 			}, 1500);
 		} else {
 			setSearchResult([])
@@ -179,9 +188,14 @@ export default function NavBar({ className }: { className?: string }) {
 							</Menu>
 
 							{/* TODO: TOOLS */}
-							<div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:pr-0">
+							<div className="absolute inset-y-0 right-0 flex items-center pr-2 ml-2 sm:static sm:inset-auto sm:pr-0">
 								{/* Profile dropdown */}
-								<Menu as="div" className="relative ml-3">
+								<Tooltip title="Create post" arrow placement="left">
+									<Link href={pageRoutes.article.CREATE}>
+										<PencilSquareIcon width={25} />
+									</Link>
+								</Tooltip>
+								<Menu as="div" className="relative ml-5">
 									<div>
 										<Menu.Button className="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
 											<span className="sr-only">Open user menu</span>
@@ -203,8 +217,23 @@ export default function NavBar({ className }: { className?: string }) {
 										leaveFrom="transform opacity-100 scale-100"
 										leaveTo="transform opacity-0 scale-95"
 									>
-										<Menu.Items className="absolute right-0 z-30 mt-2 w-48 origin-top-right rounded-md overflow-hidden bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-											{/* <Menu.Item as={}> <span> thang@gmail.com</span></Menu.Item> */}
+										<Menu.Items className="absolute right-0 z-30 min-w-[10rem] mt-2 origin-top-right rounded-md overflow-hidden bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+											{isAuth && (
+												<>
+													<Menu.Item>
+														<Link
+															href={pageRoutes.myAccount.INFO}
+															className={classNames('hover:bg-gray-100', 'block px-4 py-2 text-sm text-gray-500 hover:text-black')}
+														>
+															<span className='block text-black font-bold'>
+																{currentUser?.fullName}
+															</span>
+															{currentUser?.email}
+														</Link>
+													</Menu.Item>
+													<Hr.Basic />
+												</>
+											)}
 											{(isAuth ? navBarConfig.menuItems.forUser : navBarConfig.menuItems.forGuest).map((menuItem, index) => (
 												<Menu.Item key={index}>
 													{({ active }) => (

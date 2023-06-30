@@ -1,5 +1,5 @@
 import notify from "@/configs/notify";
-import localStorageKeys from "@/constants/local-storage-keys";
+import storageKeys from "@/constants/local-storage-keys";
 import pageRoutes from "@/constants/page-path";
 import Custom404 from "@/pages/404";
 import { isJwtExpired } from "@/utils/jwt";

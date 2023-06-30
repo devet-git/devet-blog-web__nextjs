@@ -1,20 +1,20 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { RootState } from "./store";
 import { HYDRATE } from "next-redux-wrapper"
-import localStorageKeys from "@/constants/local-storage-keys";
+import storageKeys from "@/constants/local-storage-keys";
 import { isJwtExpired } from "@/utils/jwt";
 import browserUtils from "@/utils/browser";
 import { User } from "@/types/api-object";
 
 type AuthStateType = {
 	isAuth: boolean
-	currentUser: any
+	userId: string
 }
 
 
 const initialState: AuthStateType = {
 	isAuth: !isJwtExpired(),
-	currentUser: {}
+	userId: "cascb"
 	// currentUser: browserUtils.store.get(localStorageKeys.USER) || null
 }
 
@@ -25,8 +25,8 @@ const authSlice = createSlice({
 		setIsAuth: (state, action) => {
 			state.isAuth = action.payload
 		},
-		setCurrentUser: (state, action) => {
-			state.currentUser = action.payload
+		setUserId: (state, action) => {
+			state.userId = action.payload
 		}
 	},
 	// extraReducers(builder) {
@@ -37,7 +37,7 @@ const authSlice = createSlice({
 	extraReducers(builder) {
 		builder.addCase<typeof HYDRATE, PayloadAction<any, typeof HYDRATE>>(
 			HYDRATE,
-			(state, { payload }) => ({ ...state, ...payload.page })
+			(state, action) => ({ ...state, ...action.payload })
 		);
 	},
 })
@@ -47,5 +47,5 @@ const authReducer = authSlice.reducer;
 export default authReducer;
 
 export const selectIsAuth = (state: RootState) => state.auth.isAuth
-export const selectCurrentUser = (state: RootState) => state.auth.currentUser
-export const { setIsAuth, setCurrentUser } = authSlice.actions;
+export const selectUserId = (state: RootState) => state.auth.userId
+export const { setIsAuth, setUserId } = authSlice.actions;
