@@ -10,21 +10,25 @@ import pageRoutes from "@/constants/page-path";
 import notify from "@/configs/notify";
 import { NextPage } from "next";
 import withoutAuth from "@/middlewares/without-auth";
-import { setIsAuth } from "@/redux/authSlice";
+import { setUserId, setIsAuth } from "@/redux/authSlice";
 import { useDispatch } from "react-redux"
 import { useState } from "react";
 import { classNames } from "@/utils/html-class";
+import { User } from "@/types/api-object";
+import { useCookies } from "react-cookie";
 
 const Page: NextPage = () => {
 	const router = useRouter();
 	const dispatch = useDispatch()
 	const [isCallingApi, setIsCallingApi] = useState<boolean>(false)
-
+	const [cookies, setCookie] = useCookies(['userId'])
 	const handleLogin = async (values: any) => {
 		setIsCallingApi(true)
 		const { email, password } = values
-		const data = await authService.login({ email, password })
-		if (data) {
+		const apiRes = await authService.login({ email, password })
+		if (apiRes) {
+			const userId = apiRes.data.user.id
+			dispatch(setUserId(userId))
 			dispatch(setIsAuth(true)); //TODO: set global state
 			notify.success() //TODO: show notify
 			//TODO: redirect to home page or before page

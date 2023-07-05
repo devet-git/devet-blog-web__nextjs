@@ -14,6 +14,8 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import Custom404 from "../404";
+import { ReactElement } from "react";
+import { NextPageWithLayout } from "../_app";
 
 
 
@@ -21,7 +23,7 @@ type Props = {
 	article: Article
 }
 /* eslint-disable @next/next/no-img-element */
-const Page: NextPage<Props> = ({ article }) => {
+const Page: NextPageWithLayout<Props> = ({ article }) => {
 	if (!article) return <Custom404 />
 
 	const PosterInfo = () => (
@@ -47,7 +49,7 @@ const Page: NextPage<Props> = ({ article }) => {
 		</header>
 	)
 	return (
-		<MainLayout>
+		<>
 			<main className="pt-8 pb-16 lg:pt-16 lg:pb-24 bg-white dark:bg-gray-900">
 				<div className="flex justify-between px-4 mx-auto max-w-screen-xl ">
 					<article className="mx-auto w-full max-w-2xl format format-sm sm:format-base lg:format-lg format-blue dark:format-invert">
@@ -68,7 +70,7 @@ const Page: NextPage<Props> = ({ article }) => {
 			</main>
 			<ArticleRelatedList articles={[article]} />
 			{/* <SignupEmailNotification /> */}
-		</MainLayout>
+		</>
 	)
 }
 export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
@@ -97,5 +99,5 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 	}
 }
 
-// Page.getLayout = (page: ReactJSXElement) => (<MainLayout>{page}</MainLayout>)
+Page.getLayout = (page: ReactElement) => (<MainLayout>{page}</MainLayout>)
 export default Page;

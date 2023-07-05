@@ -1,7 +1,8 @@
 import axios from "axios";
-import localStorageNames from "@/constants/local-storage-names";
+import storageKeys from "@/constants/local-storage-keys";
 import apiEndpoints from "@/constants/api-endpoints";
 import { isJwtExpired } from "@/utils/jwt";
+import browserUtils from "@/utils/browser";
 
 const api = axios.create({
 	baseURL: apiEndpoints.BASE,
@@ -11,7 +12,7 @@ const api = axios.create({
 })
 api.interceptors.request.use((config) => {
 	if (typeof window !== 'undefined') {
-		const token = localStorage.getItem(localStorageNames.JWT_TOKEN)
+		const token = browserUtils.store.get(storageKeys.JWT_TOKEN)
 		if (token && !isJwtExpired()) {
 			config.headers.Authorization = `Bearer ${token}`
 		} else {

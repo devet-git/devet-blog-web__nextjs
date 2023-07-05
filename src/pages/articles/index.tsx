@@ -6,6 +6,8 @@ import { GetServerSideProps, NextPage } from "next";
 import { Article } from "@/types/api-object";
 import Pagination from "@/components/pagination";
 import DontHaveArticle from "@/components/article/dont-have";
+import { ReactElement } from "react";
+import { NextPageWithLayout } from "../_app";
 
 
 type Props = {
@@ -14,22 +16,19 @@ type Props = {
 	currentPage: any
 }
 
-const Page: NextPage<Props> = ({ articles, totalPage, currentPage }) => {
+const Page: NextPageWithLayout<Props> = ({ articles, totalPage, currentPage }) => {
+	if (!articles.length) return <DontHaveArticle />
 	return (
-		<MainLayout>
-			{!articles.length ? (<DontHaveArticle />) : (
-				<>
-					<ArticleList articles={articles} />
-					<div className="flex justify-center w-full">
-						<Pagination
-							totalPage={totalPage}
-							urlTemplate="/articles?page="
-							currentPage={currentPage}
-						/>
-					</div>
-				</>
-			)}
-		</MainLayout >
+		<>
+			<ArticleList articles={articles} />
+			<div className="flex justify-center w-full">
+				<Pagination
+					totalPage={totalPage}
+					urlTemplate="/articles?page="
+					currentPage={currentPage}
+				/>
+			</div>
+		</>
 	)
 }
 
@@ -72,5 +71,5 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 		}
 	}
 }
-// Page.getLayout = (page: ReactElement) => (<MainLayout>{page}</MainLayout>)
+Page.getLayout = (page: ReactElement) => (<MainLayout>{page}</MainLayout>)
 export default Page;

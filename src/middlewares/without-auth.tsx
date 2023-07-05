@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import localStorageNames from '@/constants/local-storage-names';
+import storageKeys from '@/constants/local-storage-keys';
 import { NextApiHandler, NextApiRequest, NextApiResponse, NextComponentType } from 'next';
 import { useRouter } from 'next/router';
 import Custom404 from '@/pages/404';

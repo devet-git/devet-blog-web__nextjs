@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic';
 import { Button, Card, CardActions, CardContent, CardHeader, Divider, TextField } from '@mui/material';
-import { useEffect, useState, useRef, SetStateAction } from 'react';
+import { useEffect, useState, useRef, SetStateAction, ReactElement } from 'react';
 import DOMPurify from 'dompurify'
 import MainLayout from '@/layouts/main-layout';
 import { GetServerSideProps, NextPage } from 'next';
@@ -19,6 +19,7 @@ import { UploadBeforeHandler, UploadBeforeReturn } from 'suneditor-react/dist/ty
 import fileService from '@/services/file';
 import articleService, { CreateArticleParams } from '@/services/article';
 import notify from '@/configs/notify';
+import { NextPageWithLayout } from '../_app';
 
 type ArticleImage = {
 	id: string,
@@ -38,7 +39,7 @@ export const htmlToMarkdown = (html: string): string => {
 	return markdown;
 }
 
-const Page: NextPage = () => {
+const Page: NextPageWithLayout = () => {
 	const [articleImages, setArticleImages] = useState<ArticleImage[]>([])
 	const [editorContent, setEditorContent] = useState<string>('');
 	const editorRef = useRef<SunEditorCore>()
@@ -65,6 +66,7 @@ const Page: NextPage = () => {
 			}
 		},
 	})
+
 	const getEditorInstance = (editor: SunEditorCore) => {
 		editorRef.current = editor
 	}
@@ -125,7 +127,7 @@ const Page: NextPage = () => {
 	const handlePostArticle = async (params: CreateArticleParams): Promise<void> => {
 
 		const apiRes = await articleService.create(params)
-		if (apiRes.statusCode === 200) {
+		if (apiRes?.statusCode === 200) {
 			formik.resetForm()
 			editorRef.current?.setContents('');
 			notify.success("Your article have posted successfully")
@@ -138,7 +140,7 @@ const Page: NextPage = () => {
 
 
 	return (
-		<MainLayout>
+		<>
 			<form onSubmit={formik.handleSubmit} className='px-5 py-2'>
 				<Card className='w-full'>
 					<CardContent className='grid grid-flow-col gap-x-2'>
@@ -213,8 +215,9 @@ const Page: NextPage = () => {
 					onImageUpload={handleImageUpload}
 				/>
 			</section>
-		</MainLayout>
+		</>
 	);
 }
+Page.getLayout = (page: ReactElement) => (<MainLayout>{page}</MainLayout>)
 
 export default withAuth(Page)

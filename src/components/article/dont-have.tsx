@@ -2,7 +2,7 @@ import pageRoutes from "@/constants/page-path";
 import Link from "next/link";
 
 const DontHaveArticle = () => (
-	<div className="h-[85vh] flex flex-col gap-4 justify-center items-center ">
+	<div className="h-[80vh] flex flex-col gap-4 justify-center items-center ">
 		<h1 className="text-4xl">Don&apos;t have any article</h1>
 		<p>Please type other keyword</p>
 		<Link
